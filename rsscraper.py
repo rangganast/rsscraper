@@ -23,6 +23,7 @@ def detik():
     titles = []
     links = []
     photo_links = []
+    datetime = []
     
     # Get content div
     news_contents = soup.find_all('div', {'class': 'list__news__content'})
@@ -38,6 +39,11 @@ def detik():
         link = soup2.find('a')['href']
         links.append(link)
 
+        # Get Time
+        time = soup2.findAll('div', {'class': 'date'})
+        for d in time:
+            datetime.append(d.text)
+
     # Get Image
     photo_div = soup.find_all('div', {'class': 'list__news__photo pull-left'})
 
@@ -51,7 +57,7 @@ def detik():
         return redirect(url_for('article', link=link))
 
     # Send Variables to html template
-    return render_template('detik.html', links=links, titles=titles, photo_links=photo_links)
+    return render_template('detik.html', links=links, titles=titles, photo_links=photo_links, datetime=datetime)
 
 @app.route('/cnn')
 def cnn():
@@ -190,161 +196,174 @@ def article():
 
         # TRAVEL NEWS
         if category.text == 'TRAVEL NEWS':
-            title = soup.find('h2', {'class': 'mt5'}).text
+            # Delete tags
+            for div in soup.find_all('div', {'class': 'detail_tag'}):
+                div.decompose()
 
-            image = []
-            img = soup.find('picture').find('img')['src']
-            image.append(img)
+            for a in soup.find_all('a', {'class': 'embed'}):
+                a.decompose()
 
-            text_div = soup.find(
-                'div', {'class': 'itp_bodycontent read__content pull-left'})
-
-            return render_template('article.html', title=title, image=image, text_div=text_div)
-
-        # DOMESTIC DESTINATIONS
-        if category.text == 'DOMESTIC DESTINATIONS':
-            title = soup.find('h2', {'class': 'mt5'}).text
-
-            image = []
-            img = soup.find('picture').find('img')['src']
-            image.append(img)
-
-            text_div = soup.find('div', {'id' : 'detikdetailtext'})
-
-            return render_template('article.html', title=title, image=image, text_div=text_div)
-
-        # INTERNATIONAL DESTINATIONS
-        if category.text == 'INTERNATIONAL DESTINATIONS':
-            title = soup.find('h2', {'class': 'mt5'}).text
-
-            image = []
-            img = soup.find('picture').find('img')['src']
-            image.append(img)
-
-            text_div = soup.find('div', {'class' : 'itp_bodycontent read__content pull-left'})
-
-            return render_template('article.html', title=title, image=image, text_div=text_div)
-
-        # TRAVEL-TIPS
-        if category.text == 'TRAVEL-TIPS':
-            title = soup.find('h2', {'class': 'mt5'}).text
-
-            image = []
-            img = soup.find('picture').find('img')['src']
-            image.append(img)
-
-            text_div = soup.find('div', {'class' : 'itp_bodycontent read__content pull-left'})
-
-            return render_template('article.html', title=title, image=image, text_div=text_div)
-
-        # D'TRAVELERS STORIES
-        if category.text == "D'TRAVELERS STORIES":
-            title = soup.find('h2', {'class': 'mt5'}).text
-
-            # Scrape images
-            image = []
-            inline_texts = []
-
-            caption = soup.find('div', {'class', 'read__photo__count'}).text
-            whitelist = set(
-                'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890')
-            num = ''.join(filter(whitelist.__contains__, caption))
-
-            numbers = '1234567890'
-            if num[-2] in numbers:
-                count = int(num[-2:])
-            else:
-                count = int(num[-1])
-
-            for i in range(1, count+1):
-                url = link + '/' + str(i)
-                http = urllib3.PoolManager()
-                response = http.request('GET', url)
-                soup2 = BeautifulSoup(response.data)
-
-
-                div = soup2.findAll('div', {'class': 'ratio16_9 box_img'})
-                for i in div:
-                    picture_div = i.findAll('picture', {'class': 'img_con'})
-                    for img_div in picture_div:
-                        img = img_div.find('img')['src']
-                        image.append(img)
-
-                inline = soup2.findAll(
-                    'div', {'class': 'read__photo__big__caption'})
-                for i in inline:
-                    inline_texts.append(i.text)
-
-            text_div = soup.find('div', {'class': 'read__content full mt20'})
-
-            return render_template('article.html', title=title, image=image, text_div=text_div, inline_texts=inline_texts)
-
-        # D'TRAVELERS PHOTOS
-        if category.text == "D'TRAVELERS PHOTOS":
+            for strong in soup.find_all('strong'):
+                strong.decompose()
 
             # Scrape title
             title = soup.find('h2', {'class': 'mt5'}).text
 
             # Scrape images
             image = []
-            inline_texts = []
-            urls = []
-            con_ = []
+            img = soup.find('picture').find('img')['src']
+            image.append(img)
 
-            div_caption = soup.findAll('div', {'class', 'read__photo__count'})
-            for i in div_caption:
-                caption = i.text
+            # Scrape datetime
+            time = soup.findAll('div', {'class': 'date'})
+            for d in time:
+                datetime = d.text
 
-            whitelist = set(
-                'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890')
-            num = ''.join(filter(whitelist.__contains__, caption))
+            # Scrape content
+            text_div = soup.find('div', {'class': 'itp_bodycontent read__content pull-left'})
 
-            numbers = '1234567890'
-            if num[-2] in numbers:
-                count = int(num[-2:])
-            else:
-                count = int(num[-1])
+            return render_template('article.html', title=title, image=image, text_div=text_div, datetime=datetime)
 
-            for i in range(1, count+1):
-                url = link + '/' + str(i)
-                urls.append(url)
+        # DOMESTIC DESTINATIONS
+        if category.text == 'DOMESTIC DESTINATIONS':
+            # Delete tags
+            for div in soup.find_all('div', {'class': 'detail_tag'}):
+                div.decompose()
 
-            for url in urls:
-                class NoRedirect(urllib.request.HTTPRedirectHandler):
-                    def redirect_request(self, req, fp, code, msg, headers, newurl):
-                        return None
+            for a in soup.find_all('a', {'class': 'embed'}):
+                a.decompose()
+
+            for strong in soup.find_all('strong'):
+                strong.decompose()
+
+            title = soup.find('h2', {'class': 'mt5'}).text
+
+            image = []
+            img = soup.find('picture').find('img')['src']
+            image.append(img)
+
+            time = soup.findAll('div', {'class': 'date'})
+            for d in time:
+                datetime = d.text
+
+            text_div = soup.find('div', {'id' : 'detikdetailtext'})
+
+            return render_template('article.html', title=title, image=image, text_div=text_div, datetime=datetime)
+
+        # INTERNATIONAL DESTINATIONS
+        if category.text == 'INTERNATIONAL DESTINATIONS':
+            # Delete tags
+            for div in soup.find_all('div', {'class': 'detail_tag'}):
+                div.decompose()
+
+            for a in soup.find_all('a', {'class': 'embed'}):
+                a.decompose()
+
+            for strong in soup.find_all('strong'):
+                strong.decompose()
                 
-                req = urllib.request.Request(
-                    url, headers={'User-Agent': "Magic Browser"})
-                opener = urllib.request.build_opener(NoRedirect)
-                urllib.request.install_opener(opener)
+            title = soup.find('h2', {'class': 'mt5'}).text
 
-                try:
-                    con = urllib.request.urlopen(url)
-                except urllib.error.HTTPError as e:
-                    con = e
+            image = []
+            img = soup.find('picture').find('img')['src']
+            image.append(img)
 
-                soup2 = BeautifulSoup(con.read(), 'html.parser')
-                # response = requests.get(url, allow_redirects=False)
-                # soup2 = BeautifulSoup(response.text, 'html.parser')
+            time = soup.findAll('div', {'class': 'date'})
+            for d in time:
+                datetime = d.text
 
-                div = soup2.findAll('div', {'class': 'ratio16_9 box_img'})
-                for i in div:
-                    picture_div = i.findAll('picture', {'class': 'img_con'})
-                    for img_div in picture_div:
-                        img = img_div.find('img')['src']
-                        image.append(img)
-                        
+            text_div = soup.find('div', {'class' : 'itp_bodycontent read__content pull-left'})
 
-                inline = soup2.findAll(
-                    'div', {'class': 'read__photo__big__caption'})
-                for i in inline:
-                    inline_texts.append(i.text)
+            return render_template('article.html', title=title, image=image, text_div=text_div, datetime=datetime)
 
-                text_div = soup.find(
-                    'div', {'class': 'read__content full mt20'})
+        # TRAVEL-TIPS
+        if category.text == 'TRAVEL-TIPS':
+            # Delete tags
+            for div in soup.find_all('div', {'class': 'detail_tag'}):
+                div.decompose()
 
-            return render_template('article.html', title=title, image=image, text_div=text_div, inline_texts=inline_texts)
+            for a in soup.find_all('a', {'class': 'embed'}):
+                a.decompose()
+
+            for strong in soup.find_all('strong'):
+                strong.decompose()
+                
+            title = soup.find('h2', {'class': 'mt5'}).text
+
+            image = []
+            img = soup.find('picture').find('img')['src']
+            image.append(img)
+
+            time = soup.findAll('div', {'class': 'date'})
+            for d in time:
+                datetime = d.text
+
+            text_div = soup.find('div', {'class' : 'itp_bodycontent read__content pull-left'})
+
+            return render_template('article.html', title=title, image=image, text_div=text_div, datetime=datetime)
+
+        # D'TRAVELERS STORIES
+        if category.text == "D'TRAVELERS STORIES":
+            # Scrape title
+            title = soup.find('h2', {'class': 'mt5'}).text
+            
+            # Scrape images
+            image = []
+            inline_texts = []
+
+            div = soup.findAll('span', {'class': 'img_con lqd'})
+
+            for elem in div:
+                img = elem.find('img')['src']
+                image.append(img.replace("?w=200&q=90", "?w=600&q=90"))
+
+                text = elem.find('img')['alt']
+                inline_texts.append(text)
+
+            text_div = ''
+
+            p_header = soup.findAll('div', {'class': 'clearfix detail_wrap'})
+
+            p_div = soup.findAll('p')
+            p_div = p_div[1:]
+
+            for p in p_div:
+                p_header.append(p)
+            
+            for text in p_header:
+                text_div += str(text)
+
+            time = soup.findAll('div', {'class': 'date'})
+            for d in time:
+                datetime = d.text
+
+            return render_template('article.html', title=title, image=image, text_div=text_div, inline_texts=inline_texts, datetime=datetime)
+
+        # D'TRAVELERS PHOTOS
+        if category.text == "D'TRAVELERS PHOTOS":
+            # Scrape title
+            title = soup.find('h2', {'class': 'mt5'}).text
+
+            # Scrape images
+            image = []
+            inline_texts = []
+
+            div = soup.findAll('span', {'class': 'img_con lqd'})
+
+            for elem in div:
+                img = elem.find('img')['src']
+                image.append(img.replace("?w=200&q=90", "?w=600&q=90"))
+
+                text = elem.find('img')['alt']
+                inline_texts.append(text)
+
+            time = soup.findAll('div', {'class': 'date'})
+            for d in time:
+                datetime = d.text
+
+            text_div = soup.find('div', {'class': 'read__content full mt20'})
+
+            return render_template('article.html', title=title, image=image, text_div=text_div, inline_texts=inline_texts, datetime=datetime)
 
         # PHOTOS
         if category.text == 'PHOTOS':
@@ -354,7 +373,7 @@ def article():
             image = []
             inline_texts = []
 
-            caption = soup.find('div', {'class', 'read__photo__count'}).text
+            caption = soup.find('div', {'class': 'read__photo__count'}).text
             whitelist = set(
                 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890')
             num = ''.join(filter(whitelist.__contains__, caption))
@@ -371,15 +390,25 @@ def article():
                 response = http.request('GET', url)
                 soup2 = BeautifulSoup(response.data)
 
-                img = soup2.find('picture', {'class', 'img_con'}).find('img')['src']
-                image.append(img)
+                div = soup2.findAll('div', {'class': 'ratio16_9 box_img'})
+                for i in div:
+                    img_div = i.findAll('picture', {'class': 'img_con'})
+                    for i in img_div:
+                        img = i.find('img')['src']
+                        image.append(img.replace("?w=300&q=", "?w=600&q=90"))
 
-                inline = soup2.find('div', {'class': 'read__photo__big__caption'}).find('p')
-                inline_texts.append(inline.text)
+                inline = soup2.findAll('div', {'class': 'read__photo__big__caption'})
+                for i in inline:
+                    inline_text = i.find('p')
+                    inline_texts.append(inline_text.text)
+
+            time = soup.findAll('div', {'class': 'date'})
+            for d in time:
+                datetime = d.text
             
             text_div = soup.find('div', {'class': 'read__content full mt20'}).find('p')
 
-            return render_template('article.html', title=title, image=image, text_div=text_div, inline_texts=inline_texts)
+            return render_template('article.html', title=title, image=image, text_div=text_div, inline_texts=inline_texts, datetime=datetime)
 
 if __name__ == '__main__':
     app.run(debug=True)

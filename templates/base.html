@@ -31,7 +31,14 @@
             <a class="navbar-brand" href="{{ url_for('home') }}">Travel Feed</a>
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('detik') }}">Detik</a>
+                    <a class="nav-link" 
+                    {%- if request.path == "/detik" %}
+                        href="{{ url_for('detik') }}"
+                    {% else %}
+                        href="#" onclick="window.history.back()"
+                    {% endif %}>
+                        Detik
+                    </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('cnn') }}">CNN</a>
