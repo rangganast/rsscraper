@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Travel Feed</title>
+        <link>#</link>
+        <description>Travel Feed</description>
+        <image>
+            <title>rss-image</title>
+            <link>#</link>
+            <url>http://rss.detik.com/images/rsslogo_detikcom.gif</url>
+        </image>
+        {% for i in range(links|length) %}
+        <item>
+            <title>
+                <![CDATA[{{titles[i]}}]]>
+            </title>
+            <link>{{links[i]}}</link>
+            <pubDate>{{datetime[i]}}</pubDate>
+            <description>
+                <img src="{{photo_links[i]}}"/>
+                <![CDATA[{{paragraph[i]}}]]>
+            </description>
+        </item>
+        {% endfor %}
+    </channel>
+</rss>
