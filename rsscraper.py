@@ -92,7 +92,7 @@ def cnn():
     for article in news_contents:
 
         # Get Title
-        for i in article.findAll('h2', {'class': 'title'}):
+        for i in article.findAll('h1', {'class': 'title'}):
             titles.append(i.text)
 
         # Get Link
@@ -209,7 +209,7 @@ def articledetik():
             strong.decompose()
 
         # Scrape title
-        title = soup.find('h2', {'class': 'mt5'}).text
+        title = soup.find('h1', {'class': 'mt5'}).text
 
         # Scrape images
         image = []
@@ -238,7 +238,7 @@ def articledetik():
         for strong in soup.find_all('strong'):
             strong.decompose()
 
-        title = soup.find('h2', {'class': 'mt5'}).text
+        title = soup.find('h1', {'class': 'mt5'}).text
 
         image = []
         img = soup.find('picture').find('img')['src']
@@ -264,7 +264,7 @@ def articledetik():
         for strong in soup.find_all('strong'):
             strong.decompose()
             
-        title = soup.find('h2', {'class': 'mt5'}).text
+        title = soup.find('h1', {'class': 'mt5'}).text
 
         image = []
         img = soup.find('picture').find('img')['src']
@@ -290,7 +290,7 @@ def articledetik():
         for strong in soup.find_all('strong'):
             strong.decompose()
             
-        title = soup.find('h2', {'class': 'mt5'}).text
+        title = soup.find('h1', {'class': 'mt5'}).text
 
         image = []
         img = soup.find('picture').find('img')['src']
@@ -344,7 +344,7 @@ def articledetik():
     # D'TRAVELERS PHOTOS
     if category.text == "D'TRAVELERS PHOTOS":
         # Scrape title
-        title = soup.find('h2', {'class': 'mt5'}).text
+        title = soup.find('h1', {'class': 'mt5'}).text
 
         # Scrape images
         image = []
@@ -369,7 +369,7 @@ def articledetik():
 
     # PHOTOS
     if category.text == 'PHOTOS':
-        title = soup.find('h2', {'class': 'mt5'}).text
+        title = soup.find('h1', {'class': 'mt5'}).text
 
         # Scrape images
         image = []
@@ -425,7 +425,7 @@ def articledetik():
                 strong.decompose()
 
             # Scrape title
-            title = soup.find('h2', {'class': 'mt5'}).text
+            title = soup.find('h1', {'class': 'mt5'}).text
 
             # Scrape images
             image = []
