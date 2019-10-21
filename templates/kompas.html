@@ -3,6 +3,14 @@
 {% block title %}Kompas Travel{% endblock title %}
 
 {% block content %}
+<div class="container py-3">
+    <form action="/detik" , method="POST">
+        <button type="submit" class="btn btn-secondary" aria-label="Left Align" name="rss">
+            RSS
+        </button>
+    </form>
+</div>
+
 {% for i in range(links|length) %}
 <section>
     <div class="container py-3">
@@ -15,7 +23,7 @@
                     <div class="col-md-8 px-3">
                         <div class="card-block px-3">
                             <h4>{{titles[i]}}</h4>
-                            <h6>{{datetime[i]}}</h6>
+                            <h6>{{datetimes[i]}}</h6>
                             <a href="{{links[i]}}">
                                 <button type="submit" class="btn btn-primary" value="{{links[i]}}" name="link">Read
                                     More</button>

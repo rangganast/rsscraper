@@ -21,7 +21,7 @@ def detik():
     titles = []
     links = []
     photo_links = []
-    datetime = []
+    datetimes = []
     paragraph = []
     
     # Get content div
@@ -41,7 +41,7 @@ def detik():
         # Get Time
         time = soup2.findAll('div', {'class': 'date'})
         for d in time:
-            datetime.append(d.text)
+            datetimes.append(d.text)
 
         # Get paragraph
         par = soup2.find('p').text
@@ -53,7 +53,7 @@ def detik():
     session['links'] = links
     session['titles'] = titles
     session['photo_links'] = photo_links
-    session['datetime'] = datetime
+    session['datetimes'] = datetimes
     session['paragraph'] = paragraph
 
     for i in photo_div:
@@ -71,7 +71,7 @@ def detik():
             return redirect(url_for('feed'))
 
     # Send Variables to html template
-    return render_template('detik.html', links=links, titles=titles, photo_links=photo_links, datetime=datetime, paragraph=paragraph)
+    return render_template('detik.html', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes, paragraph=paragraph)
 
 @app.route('/cnn')
 def cnn():
@@ -119,7 +119,7 @@ def kompas():
     titles = []
     links = []
     photo_links = []
-    datetime = []
+    datetimes = []
 
     # Find content div
     news_contents = soup.findAll('div', {'class': 'article__asset'})
@@ -140,14 +140,19 @@ def kompas():
 
     time_div = soup.findAll('div', {'class': 'article__date'})
     for i in time_div:
-        datetime.append('Kompas Travel | ' + i.text)
+        datetimes.append('Kompas Travel | ' + i.text)
             
-    if request.method == 'POST':
-        link = request.form.get('link')
-        return redirect(url_for('articlekompas', link=link))
+    if "link" in request.form:
+        if request.method == 'POST':
+            link = request.form.get('link')
+            return redirect(url_for('articledetik', link=link))
+
+    if "rss" in request.form:
+        if request.method == 'POST':
+            return redirect(url_for('detikfeed'))
 
     # Send Variables to html template
-    return render_template('kompas.html', links=links, titles=titles, photo_links=photo_links, datetime=datetime)
+    return render_template('kompas.html', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes)
 
 @app.route('/jakartapost')
 def jakartapost():
@@ -216,15 +221,15 @@ def articledetik():
         img = soup.find('picture').find('img')['src']
         image.append(img)
 
-        # Scrape datetime
+        # Scrape datetimes
         time = soup.findAll('div', {'class': 'date'})
         for d in time:
-            datetime = d.text
+            datetimes = d.text
 
         # Scrape content
         text_div = soup.find('div', {'class': 'itp_bodycontent read__content pull-left'})
 
-        return render_template('articledetik.html', title=title, image=image, text_div=text_div, datetime=datetime)
+        return render_template('articledetik.html', title=title, image=image, text_div=text_div, datetimes=datetimes)
 
     # DOMESTIC DESTINATIONS
     if category.text == 'DOMESTIC DESTINATIONS':
@@ -246,11 +251,11 @@ def articledetik():
 
         time = soup.findAll('div', {'class': 'date'})
         for d in time:
-            datetime = d.text
+            datetimes = d.text
 
         text_div = soup.find('div', {'id' : 'detikdetailtext'})
 
-        return render_template('articledetik.html', title=title, image=image, text_div=text_div, datetime=datetime)
+        return render_template('articledetik.html', title=title, image=image, text_div=text_div, datetimes=datetimes)
 
     # INTERNATIONAL DESTINATIONS
     if category.text == 'INTERNATIONAL DESTINATIONS':
@@ -272,11 +277,11 @@ def articledetik():
 
         time = soup.findAll('div', {'class': 'date'})
         for d in time:
-            datetime = d.text
+            datetimes = d.text
 
         text_div = soup.find('div', {'class' : 'itp_bodycontent read__content pull-left'})
 
-        return render_template('articledetik.html', title=title, image=image, text_div=text_div, datetime=datetime)
+        return render_template('articledetik.html', title=title, image=image, text_div=text_div, datetimes=datetimes)
 
     # TRAVEL-TIPS
     if category.text == 'TRAVEL-TIPS':
@@ -298,11 +303,11 @@ def articledetik():
 
         time = soup.findAll('div', {'class': 'date'})
         for d in time:
-            datetime = d.text
+            datetimes = d.text
 
         text_div = soup.find('div', {'class' : 'itp_bodycontent read__content pull-left'})
 
-        return render_template('articledetik.html', title=title, image=image, text_div=text_div, datetime=datetime)
+        return render_template('articledetik.html', title=title, image=image, text_div=text_div, datetimes=datetimes)
 
     # D'TRAVELERS STORIES
     if category.text == "D'TRAVELERS STORIES":
@@ -337,9 +342,9 @@ def articledetik():
 
         time = soup.findAll('div', {'class': 'date'})
         for d in time:
-            datetime = d.text
+            datetimes = d.text
 
-        return render_template('articledetik.html', title=title, image=image, text_div=text_div, inline_texts=inline_texts, datetime=datetime)
+        return render_template('articledetik.html', title=title, image=image, text_div=text_div, inline_texts=inline_texts, datetimes=datetimes)
 
     # D'TRAVELERS PHOTOS
     if category.text == "D'TRAVELERS PHOTOS":
@@ -361,11 +366,11 @@ def articledetik():
 
         time = soup.findAll('div', {'class': 'date'})
         for d in time:
-            datetime = d.text
+            datetimes = d.text
 
         text_div = soup.find('div', {'class': 'read__content full mt20'})
 
-        return render_template('articledetik.html', title=title, image=image, text_div=text_div, inline_texts=inline_texts, datetime=datetime)
+        return render_template('articledetik.html', title=title, image=image, text_div=text_div, inline_texts=inline_texts, datetimes=datetimes)
 
     # PHOTOS
     if category.text == 'PHOTOS':
@@ -406,11 +411,11 @@ def articledetik():
 
         time = soup.findAll('div', {'class': 'date'})
         for d in time:
-            datetime = d.text
+            datetimes = d.text
         
         text_div = soup.find('div', {'class': 'read__content full mt20'}).find('p')
 
-        return render_template('articledetik.html', title=title, image=image, text_div=text_div, inline_texts=inline_texts, datetime=datetime)
+        return render_template('articledetik.html', title=title, image=image, text_div=text_div, inline_texts=inline_texts, datetimes=datetimes)
 
     # UGC-BRIDGE
     if category.text == 'UGC-BRIDGE':
@@ -432,16 +437,16 @@ def articledetik():
             img = soup.find('picture').find('img')['src']
             image.append(img)
 
-            # Scrape datetime
+            # Scrape datetimes
             time = soup.findAll('div', {'class': 'date'})
             for d in time:
-                datetime = d.text
+                datetimes = d.text
 
             # Scrape content
             text_div = soup.find(
                 'div', {'class': 'itp_bodycontent read__content pull-left'})
 
-            return render_template('articledetik.html', title=title, image=image, text_div=text_div, datetime=datetime)
+            return render_template('articledetik.html', title=title, image=image, text_div=text_div, datetimes=datetimes)
 
 @app.route('/articlekompas')
 def articlekompas():
@@ -454,7 +459,7 @@ def articlekompas():
     titles = []
     links = []
     photo_links = []
-    datetime = []
+    datetimes = []
     inline_texts = []
 
     # Scrape title
@@ -476,22 +481,27 @@ def articlekompas():
     # Scrape time
     time = soup.findAll('div', {'class': 'read__time'})
     for i in time:
-        datetime.append(i.text)
+        datetimes.append(i.text)
     
-    return render_template('articlekompas.html', title=title, image=image, text_div=text_div, datetime=datetime, inline_texts=inline_texts)
+    return render_template('articlekompas.html', title=title, image=image, text_div=text_div, datetimes=datetimes, inline_texts=inline_texts)
 
-@app.route('/feed.xml')
-def feed():
+@app.route('/feed/detik')
+def detikfeed():
     titles = session['titles']
     links = session['links']
-    datetime = session['datetime']
     paragraph = session['paragraph']
 
     photo_links = []
     for link in session['photo_links']:
         photo_links.append(link.split("?")[0])
 
-    template = render_template('feed.xml', links=links, titles=titles, photo_links=photo_links, datetime=datetime, paragraph=paragraph)
+    datetimes = []
+    for res in session['datetimes']:
+        res = res.replace(' WIB', ':00 +0700')
+        res = res.replace('detikTravel | ', '')
+        datetimes.append(res)
+
+    template = render_template('feed.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
 

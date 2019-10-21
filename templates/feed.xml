@@ -15,7 +15,7 @@
                 <![CDATA[{{titles[i]}}]]>
             </title>
             <link>{{links[i]}}</link>
-            <pubDate>{{datetime[i]}}</pubDate>
+            <pubDate>{{datetimes[i]}}</pubDate>
             <description>
                 <img src="{{photo_links[i]}}"/>
                 <![CDATA[{{paragraph[i]}}]]>
