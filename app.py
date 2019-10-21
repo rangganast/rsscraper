@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, url_for, redirect, make_respo
 from bs4 import BeautifulSoup
 import urllib
 import urllib3
-import re
 
 app = Flask(__name__)
 
