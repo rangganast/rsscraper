@@ -67,7 +67,7 @@ def detik():
 
     if "rss" in request.form:
         if request.method == 'POST':
-            return redirect(url_for('feed'))
+            return redirect(url_for('detikfeed'))
 
     # Send Variables to html template
     return render_template('detik.html', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes, paragraph=paragraph)
