@@ -2,12 +2,95 @@ from flask import Flask, render_template, request, url_for, redirect, make_respo
 from bs4 import BeautifulSoup
 import urllib
 import urllib3
+import re
 
 app = Flask(__name__)
+app.config["SECRET_KEY"] = 'super secret key'
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home():
-    return render_template('home.html')
+    # DETIK
+    url = 'https://travel.detik.com/'
+    req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
+    con = urllib.request.urlopen(req)
+    soup = BeautifulSoup(con.read(), 'html.parser')
+
+    titles = []
+    links = []
+    photo_links = []
+    datetimes = []
+    paragraph = []
+    
+    # Get content div
+    news_contents = soup.find_all('div', {'class': 'list__news__content'})
+
+    for i in news_contents:
+        soup2 = BeautifulSoup(str(i), 'lxml')
+
+        # Get Title
+        title = soup2.find('a').text
+        titles.append(title)
+
+        # Get Link
+        link = soup2.find('a')['href']
+        links.append(link)
+
+        # Get Time
+        time = soup2.findAll('div', {'class': 'date'})
+        for d in time:
+            datetimes.append(d.text)
+
+        # Get paragraph
+        par = soup2.find('p').text
+        paragraph.append(par)
+
+    # Get Image
+    photo_div = soup.find_all('div', {'class': 'list__news__photo pull-left'})
+
+    for i in photo_div:
+        soup2 = BeautifulSoup(str(i), 'lxml')
+        photo = soup2.find('img')['src']
+        photo_links.append(photo)
+
+###################################################################################################
+
+    # KOMPAS
+    url = 'https://indeks.kompas.com/?site=travel'
+    req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
+    con = urllib.request.urlopen(req)
+    soup = BeautifulSoup(con.read(), 'html.parser')
+
+    news_contents = soup.findAll('div', {'class': 'article__asset'})
+    
+    for article in news_contents:
+
+        # Get Links
+        link_div = article.findAll('a')
+        for i in link_div:
+            link = i['href']
+            links.append(link)
+            
+            # Get image and title
+            img_div = i.findAll('img')
+            for img in img_div:
+                photo_links.append(img['src'])
+                titles.append(img['alt'])
+
+        time_div = soup.findAll('div', {'class': 'article__date'})
+        for i in time_div:
+            datetimes.append('Kompas Travel | ' + i.text)
+
+    if request.method == 'POST':
+        link = request.form.get('link')
+
+        if re.search('detik.com', link):
+            return redirect(url_for('articledetik', link=link))
+
+        if re.search('kompas.com', link):
+            return redirect(url_for('articlekompas', link=link))
+
+    # Send Variables to html template
+    return render_template('home.html', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes, paragraph=paragraph)
 
 @app.route('/detik', methods=['GET', 'POST'])
 def detik():
@@ -48,12 +131,6 @@ def detik():
 
     # Get Image
     photo_div = soup.find_all('div', {'class': 'list__news__photo pull-left'})
-
-    session['links'] = links
-    session['titles'] = titles
-    session['photo_links'] = photo_links
-    session['datetimes'] = datetimes
-    session['paragraph'] = paragraph
 
     for i in photo_div:
         soup2 = BeautifulSoup(str(i), 'lxml')
@@ -119,6 +196,7 @@ def kompas():
     links = []
     photo_links = []
     datetimes = []
+    paragraph = []
 
     # Find content div
     news_contents = soup.findAll('div', {'class': 'article__asset'})
@@ -141,17 +219,26 @@ def kompas():
     for i in time_div:
         datetimes.append('Kompas Travel | ' + i.text)
             
-    if "link" in request.form:
-        if request.method == 'POST':
-            link = request.form.get('link')
-            return redirect(url_for('articledetik', link=link))
+    # for i in links:
+    #     req = urllib.request.Request(i, headers={'User-Agent': "Magic Browser"})
+    #     con = urllib.request.urlopen(req)
+    #     soup2 = BeautifulSoup(con.read(), 'html.parser')
 
-    if "rss" in request.form:
-        if request.method == 'POST':
-            return redirect(url_for('detikfeed'))
+    #     text_div = soup2.findAll('div', {'class': 'read__content'})
+    #     for i in text_div:
+    #         if i.findAll('p')[0].text == '':
+    #             paragraph.append(i.findAll('p')[1].text)
+    #         elif i.findAll('p')[0] == chr(255):
+    #             paragraph.append(i.findAll('p')[1].text)
+    #         else:
+    #             paragraph.append(i.findAll('p')[0].text)
+
+    if request.method == 'POST':
+        link = request.form.get('link')
+        return redirect(url_for('articlekompas', link=link))
 
     # Send Variables to html template
-    return render_template('kompas.html', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes)
+    return render_template('kompas.html', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes, paragraph=paragraph)
 
 @app.route('/jakartapost')
 def jakartapost():
@@ -191,7 +278,7 @@ def jakartapost():
     # Send Variables to html template
     return render_template('jakartapost.html', links=links, titles=titles, photo_links=photo_links)
 
-@app.route('/articledetik', methods=['GET', 'POST'])
+@app.route('/articledetik')
 def articledetik():
     link = request.args.get('link', None)
     req = urllib.request.Request(link, headers={'User-Agent': "Magic Browser"})
@@ -484,21 +571,84 @@ def articlekompas():
     
     return render_template('articlekompas.html', title=title, image=image, text_div=text_div, datetimes=datetimes, inline_texts=inline_texts)
 
-@app.route('/feed/detik')
-def detikfeed():
-    titles = session['titles']
-    links = session['links']
-    paragraph = session['paragraph']
+@app.route('/feed')
+def feed():
+    # Get URL
+    url = 'https://travel.detik.com/'
+    req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
+    con = urllib.request.urlopen(req)
+    soup = BeautifulSoup(con.read(), 'html.parser')
 
+    titles = []
+    links = []
     photo_links = []
-    for link in session['photo_links']:
-        photo_links.append(link.split("?")[0])
+    datetimes = []
+    paragraph = []
+
+    # Get content div
+    news_contents = soup.find_all('div', {'class': 'list__news__content'})
+
+    for i in news_contents:
+        soup2 = BeautifulSoup(str(i), 'lxml')
+
+        # Get Title
+        title = soup2.find('a').text
+        titles.append(title)
+
+        # Get Link
+        link = soup2.find('a')['href']
+        links.append(link)
+
+        # Get Time
+        time = soup2.findAll('div', {'class': 'date'})
+        for d in time:
+            datetimes.append(d.text)
+
+        # Get paragraph
+        par = soup2.find('p').text
+        paragraph.append(par)
+
+    # Get Image
+    photo_div = soup.find_all('div', {'class': 'list__news__photo pull-left'})
+
+    for i in photo_div:
+        soup2 = BeautifulSoup(str(i), 'lxml')
+        photo = soup2.find('img')['src']
+        photo_links.append(photo.split("?")[0])
 
     datetimes = []
-    for res in session['datetimes']:
+    for res in datetimes:
         res = res.replace(' WIB', ':00 +0700')
         res = res.replace('detikTravel | ', '')
         datetimes.append(res)
+
+#########################################################################################################
+
+    # Kompas
+    url = 'https://indeks.kompas.com/?site=travel'
+    req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
+    con = urllib.request.urlopen(req)
+    soup = BeautifulSoup(con.read(), 'html.parser')
+
+    news_contents = soup.findAll('div', {'class': 'article__asset'})
+    
+    for article in news_contents:
+
+        # Get Links
+        link_div = article.findAll('a')
+        for i in link_div:
+            link = i['href']
+            links.append(link)
+            
+            # Get image and title
+            img_div = i.findAll('img')
+            for img in img_div:
+                photo_links.append(img['src'])
+                titles.append(img['alt'])
+
+        time_div = soup.findAll('div', {'class': 'article__date'})
+        for i in time_div:
+            datetimes.append('Kompas Travel | ' + i.text)
 
     template = render_template('detikfeed.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes, paragraph=paragraph)
     response = make_response(template)
@@ -507,5 +657,4 @@ def detikfeed():
     return response
 
 if __name__ == '__main__':
-    app.secret_key = 'super secret key'
     app.run(debug=True)

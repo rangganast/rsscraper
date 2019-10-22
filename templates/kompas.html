@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="container py-3">
-    <form action="/detik" , method="POST">
+    <form action="/kompas" , method="POST">
         <button type="submit" class="btn btn-secondary" aria-label="Left Align" name="rss">
             RSS
         </button>
@@ -24,6 +24,7 @@
                         <div class="card-block px-3">
                             <h4>{{titles[i]}}</h4>
                             <h6>{{datetimes[i]}}</h6>
+                            <p>{{paragraph[i]}}</p>
                             <a href="{{links[i]}}">
                                 <button type="submit" class="btn btn-primary" value="{{links[i]}}" name="link">Read
                                     More</button>
