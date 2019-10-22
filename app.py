@@ -650,7 +650,7 @@ def feed():
         for i in time_div:
             datetimes.append('Kompas Travel | ' + i.text)
 
-    template = render_template('detikfeed.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes, paragraph=paragraph)
+    template = render_template('feed.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
 
