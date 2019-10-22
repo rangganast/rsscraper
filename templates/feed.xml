@@ -2,11 +2,11 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>Travel-Feed Holahalo Beta</title>
-        <link>https://coba-travel-feed.herokuapp.com</link>
+        <link>https://travel-feed-coba.herokuapp.com</link>
         <description>Travel-Feed Holahalo Beta</description>
         <image>
             <title>travelfeedholahalobeta</title>
-            <link>https://coba-travel-feed.herokuapp.com</link>
+            <link>https://travel-feed-coba.herokuapp.com</link>
             <url>https://66.media.tumblr.com/cc9f368962ba2168ef5a1035477e7289/tumblr_pw61bv04Mv1v2m6r7o1_250.png</url>
         </image>
         {% for i in range(links|length) %}
