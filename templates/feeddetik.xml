@@ -7,21 +7,21 @@
         <image>
             <title>Travel-Feed Holahalo Beta</title>
             <link>https://travel-feed-coba.herokuapp.com</link>
-            <url>https://66.media.tumblr.com/cc9f368962ba2168ef5a1035477e7289/tumblr_pw61bv04Mv1v2m6r7o1_250.png</url>
+            <url>https://www.collaboration133.com/wp-content/uploads/2011/06/rss.gif</url>
         </image>    
         {% for i in range(links|length) %}
-    <item>
-        <title>{{titles[i]}}</title>
-        <link>{{links[i]}}</link>
-        <guid>{{links[i]}}</guid>
-        <pubDate>{{datetimes[i]}}</pubDate>
-        <description>
-            <![CDATA[
-            <img src="{{photo_links[i]}}">
-            {{paragraph[i]}}
-            ]]>
-        </description>
-    </item>
+        <item>
+            <title>{{titles[i]}}</title>
+            <link>{{links[i]}}</link>
+            <guid>{{links[i]}}</guid>
+            <pubDate>{{datetimes[i]}}</pubDate>
+            <description>
+                <![CDATA[
+                <img src="{{photo_links[i]}}">
+                {{paragraph[i]}}
+                ]]>
+            </description>
+        </item>
         {% endfor %}
         <atom:link href="https://travel-feed-coba.herokuapp.com/feed/detik" rel="self" type="application/rss+xml" />
     </channel>
