@@ -747,7 +747,54 @@ def feedtempo():
             paragraph.append(a_div[1].find('p').text)
             datetimes.append(a_div[1].find('span').text)
 
-    template = render_template('feedtempo.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes, paragraph=paragraph)
+    datetimes_ = []
+
+    day_dict = {
+    'Senin': 'Mon',
+    'Selasa': 'Tue',
+    'Rabu': 'Wed',
+    'Kamis': 'Thue',
+    "Jum'at": 'Fri',
+    'Sabtu': 'Sat',
+    'Minggu': 'Sun'
+    }
+
+    month_dict = {
+        'Januari': ' Jan ',
+        'Februari': ' Feb ',
+        'Maret': ' Mar ',
+        'April': ' Apr ',
+        'Mei': ' May ',
+        'Juni': ' Jun ',
+        'Juli': ' Jul ',
+        'Agustus': ' Aug ',
+        'September': ' Sep ',
+        'Oktober': ' Oct ',
+        'November': ' Nov ',
+        'Desember': ' Dec ',
+    }
+
+    check_dict = {
+        'Oct': 'October'
+    }
+
+    for d in datetimes:
+        for before, after in day_dict.items():
+            d = d.replace(before, after)
+
+        for before, after in month_dict.items():
+            d = d.replace(before, after)
+
+        d = d.replace(' WIB', ':00 +0700')
+
+        for before, after in check_dict.items():
+            d_ = d.replace(before, after)
+            day = datetime.datetime.strptime(d_[:-15], '%d %B %Y').strftime('%a')
+            d_final = day + ", " + d
+
+        datetimes_.append(d_final)
+
+    template = render_template('feedtempo.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
 
