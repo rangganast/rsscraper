@@ -594,9 +594,13 @@ def feedkompas():
         '/07/': ' Jul ',
         '/08/': ' Aug ',
         '/09/': ' Sep ',
-        '/10/': ' Okt ',
+        '/10/': ' Oct ',
         '/11/': ' Nov ',
         '/12/': ' Dec ',
+    }
+
+    check_dict = {
+        'Oct': 'October'
     }
 
     for d in datetimes:
@@ -607,7 +611,14 @@ def feedkompas():
             d = d.replace(before, after)
 
         d = d.replace(' WIB', ':00 +0700')
-        datetimes_.append(d)
+
+        for before, after in check_dict.items():
+            d_ = d.replace(before, after)
+            day = datetime.datetime.strptime(d_[:-16], '%d %B %Y').strftime('%a')
+            d_final = day + ", " + d
+            d_final = d_final.replace('2019,', '2019')
+
+        datetimes_.append(d_final)
 
     # Send Variables to html template
     template = render_template('feedkompas.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
