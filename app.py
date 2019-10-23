@@ -690,7 +690,16 @@ def feeddetik():
         d = d.replace('detikTravel | ', '')
         datetimes_.append(d)
 
-    template = render_template('feeddetik.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
+    titles_ = []
+    for title in titles:
+        newchar = ''
+        for char in title:
+            if char == "'":
+                char.replace("'", "\\'")
+            newchar += char
+        titles_.append(newchar)
+
+    template = render_template('feeddetik.xml', links=links, titles=titles_, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
 
