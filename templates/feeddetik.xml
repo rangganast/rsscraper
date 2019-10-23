@@ -8,7 +8,7 @@
             <title>Travel-Feed Holahalo Beta</title>
             <link>https://travel-feed-coba.herokuapp.com</link>
             <url>https://66.media.tumblr.com/cc9f368962ba2168ef5a1035477e7289/tumblr_pw61bv04Mv1v2m6r7o1_250.png</url>
-        </image>
+        </image>    
         {% for i in range(links|length) %}
         <item>
             <title>{{titles[i]}}</title>
@@ -16,7 +16,7 @@
             <guid>{{links[i]}}</guid>
             <pubDate>{{datetimes[i]}}</pubDate>
             <description>
-                <img src="{{photo_links[i]}}"></img>>
+                <img src="{{photo_links[i]}}"></img>
                 <![CDATA[{{paragraph[i]}}]]>
             </description>
         </item>
