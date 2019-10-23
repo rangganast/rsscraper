@@ -785,7 +785,7 @@ def feedtempo():
         for before, after in month_dict.items():
             d = d.replace(before, after)
 
-        d = d.replace(' WIB', ':00 GMT')
+        d = d.replace(' WIB', ':00 +0700')
 
         for before, after in check_dict.items():
             d_ = d.replace(before, after)
