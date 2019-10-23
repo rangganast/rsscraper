@@ -10,7 +10,7 @@ Anaconda 4.7.5
 Download windows installer di https://www.anaconda.com/distribution/.
 ```
 
-Python 3.6.9
+Python 3.6.8
 
 ```
 

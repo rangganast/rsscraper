@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Travel-Feed Holahalo Beta</title>
+        <link>https://travel-feed-coba.herokuapp.com</link>
+        <description>Travel-Feed Holahalo Beta</description>
+        <image>
+            <title>Travel-Feed Holahalo Beta</title>
+            <link>https://travel-feed-coba.herokuapp.com</link>
+            <url>https://66.media.tumblr.com/cc9f368962ba2168ef5a1035477e7289/tumblr_pw61bv04Mv1v2m6r7o1_250.png</url>
+        </image>
+        {% for i in range(links|length) %}
+        <item>
+            <title>
+                <![CDATA[{{titles[i]}}]]>
+            </title>
+            <link>{{links[i]}}</link>
+            <guid>{{links[i]}}</guid>
+            <pubDate>{{datetimes[i]}}</pubDate>
+            <description>
+                <img src="{{photo_links[i]}}"/>
+                <![CDATA[{{paragraph[i]}}]]>
+            </description>
+        </item>
+        {% endfor %}
+    </channel>
+</rss>
