@@ -618,7 +618,8 @@ def feedkompas():
 
 @app.route('/feed/detik')
 def feeddetik():
-    url = 'https://travel.detik.com/indeks'
+    # Get URL
+    url = 'https://travel.detik.com/'
     req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
     con = urllib.request.urlopen(req)
     soup = BeautifulSoup(con.read(), 'lxml')
@@ -628,190 +629,48 @@ def feeddetik():
     photo_links = []
     datetimes = []
     paragraph = []
-
-    news_contents = soup.find_all('div', {'class': 'list__news__content'})
-    for news in news_contents:
-        soup2 = BeautifulSoup(str(news), 'lxml')
-
-        link_div = soup2.findAll('h3')
-        for a in link_div:
-            if soup2.find('div', {'class': 'list__news__sub'}) == None:
-                links.append(a.find('a')['href'])
     
-    for url in links:
-        req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
-        con = urllib.request.urlopen(req)
-        soup = BeautifulSoup(con.read(), 'lxml')
+    # Get content div
+    news_contents = soup.find_all('div', {'class': 'list__news__content'})
 
-        categories = soup.findAll('h4', {'class': 'mt10'})
-        for i in categories:
-            category = i.text
+    for i in news_contents:
+        soup2 = BeautifulSoup(str(i), 'lxml')
 
-        # TRAVEL NEWS
-        if category == 'TRAVEL NEWS':
-            # Scrape title
-            title = soup.findAll('h1', {'class': 'mt5'})
-            for t in title:
-                titles.append(t.text)
+        # Get Title
+        title = soup2.find('a').text
+        titles.append(title)
 
-            # Scrape images
-            img = soup.find('picture').find('img')['src']
-            photo_links.append(img.split("?")[0])
+        # Get Link
+        link = soup2.find('a')['href']
+        links.append(link)
 
-            # Scrape datetimes
-            time = soup.findAll('div', {'class': 'date'})
-            for d in time:
-                datetimes.append(d.text)
+        # Get Time
+        time = soup2.findAll('div', {'class': 'date'})
+        for d in time:
+            datetimes.append(d.text)
 
-            # Scrape content
-            text_div = soup.findAll('div', {'class': 'itp_bodycontent read__content pull-left'})
+        # Get paragraph
+        par = soup2.find('p').text
+        paragraph.append(par)
 
-        # DOMESTIC DESTINATIONS
-        if category == 'DOMESTIC DESTINATIONS':
-            title = soup.findAll('h1', {'class': 'mt5'})
-            for t in title:
-                titles.append(t.text)
+    # Get Image
+    photo_div = soup.find_all('div', {'class': 'list__news__photo pull-left'})
 
-            img = soup.find('picture').find('img')['src']
-            photo_links.append(img.split("?")[0])
-
-            time = soup.findAll('div', {'class': 'date'})
-            for d in time:
-                datetimes.append(d.text)
-
-            text_div = soup.find('div', {'id' : 'detikdetailtext'})
-
-        # INTERNATIONAL DESTINATIONS
-        if category == 'INTERNATIONAL DESTINATIONS':
-            title = soup.findAll('h1', {'class': 'mt5'})
-            for t in title:
-                titles.append(t.text)
-
-            img = soup.find('picture').find('img')['src']
-            photo_links.append(img.split("?")[0])
-
-            time = soup.findAll('div', {'class': 'date'})
-            for d in time:
-                datetimes.append(d.text)
-
-            text_div = soup.find('div', {'class' : 'itp_bodycontent read__content pull-left'})
-
-        # TRAVEL-TIPS
-        if category == 'TRAVEL-TIPS':                
-            title = soup.findAll('h1', {'class': 'mt5'})
-            for t in title:
-                titles.append(t.text)
-
-            img = soup.find('picture').find('img')['src']
-            photo_links.append(img.split("?")[0])
-
-            time = soup.findAll('div', {'class': 'date'})
-            for d in time:
-                datetimes.append(d.text)
-
-            text_div = soup.find('div', {'class' : 'itp_bodycontent read__content pull-left'})
-
-        # D'TRAVELERS STORIES
-        if category == "D'TRAVELERS STORIES":
-            # Scrape title
-            title = soup.findAll('h1', {'class': 'mt5'})
-            for t in title:
-                titles.append(t.text)
-
-            # Scrape images
-            img_div = soup.findAll('div', {'class': 'ratio16_9 box_img'})
-            for i in img_div:
-                pic_div = i.findAll('picture', {'class': 'img_con'})
-                for i in pic_div:
-                    photo_links.append(i.find('img')['src'].split("?")[0])
-
-            text_div = ''
-
-            p_header = soup.findAll('div', {'class': 'clearfix detail_wrap'})
-
-            p_div = soup.findAll('p')
-            p_div = p_div[1:]
-
-            for p in p_div:
-                p_header.append(p)
-            
-            for text in p_header:
-                text_div += str(text)
-
-            time = soup.findAll('div', {'class': 'date'})
-            for d in time:
-                datetimes.append(d.text)
-
-        # D'TRAVELERS PHOTOS
-        if category == "D'TRAVELERS PHOTOS":
-            # Scrape title
-            title = soup.findAll('h1', {'class': 'mt5'})
-            for t in title:
-                titles.append(t.text)
-
-            # Scrape images
-            image = []
-            inline_texts = []
-
-            img_div = soup.findAll('div', {'class': 'ratio16_9 box_img'})
-            for i in img_div:
-                pic_div = i.findAll('picture', {'class': 'img_con'})
-                for i in pic_div:
-                    photo_links.append(i.find('img')['src'].split("?")[0])
-
-            time = soup.findAll('div', {'class': 'date'})
-            for d in time:
-                datetimes.append(d.text)
-
-            text_div = soup.find('div', {'class': 'read__content full mt20'})
-
-        # PHOTOS
-        if category == 'PHOTOS':
-            title = soup.findAll('h1', {'class': 'mt5'})
-            for t in title:
-                titles.append(t.text)
-
-            img_div = soup.findAll('div', {'class': 'ratio16_9 box_img'})
-            for i in img_div:
-                pic_div = i.findAll('picture', {'class': 'img_con'})
-                for i in pic_div:
-                    photo_links.append(i.find('img')['src'].split("?")[0])
-
-            time = soup.findAll('div', {'class': 'date'})
-            for d in time:
-                datetimes.append(d.text)
-            
-            text_div = soup.find('div', {'class': 'read__content full mt20'}).find('p')
-
-        # UGC-BRIDGE
-        if category == 'UGC-BRIDGE':
-            # Scrape title
-            title = soup.findAll('h1', {'class': 'mt5'})
-            for t in title:
-                titles.append(t.text)
-
-            # Scrape images
-            img = soup.find('picture').find('img')['src']
-            photo_links.append(img.split("?")[0])
-
-            # Scrape datetimes
-            time = soup.findAll('div', {'class': 'date'})
-            for d in time:
-                datetimes.append(d.text)
-
-            # Scrape content
-            text_div = soup.find('div', {'class': 'itp_bodycontent read__content pull-left'})
+    for i in photo_div:
+        soup2 = BeautifulSoup(str(i), 'lxml')
+        photo = soup2.find('img')['src']
+        photo_links.append(photo.split("?")[0])
 
     datetimes_ = []
 
     day_dict = {
-    'Senin': 'Mon',
-    'Selasa': 'Tue',
-    'Rabu': 'Wed',
-    'Kamis': 'Thue',
-    "Jum'at": 'Fri',
-    'Sabtu': 'Sat',
-    'Minggu': 'Sun'
+        'Senin': 'Mon',
+        'Selasa': 'Tue',
+        'Rabu': 'Wed',
+        'Kamis': 'Thue',
+        "Jum'at": 'Fri',
+        'Sabtu': 'Sat',
+        'Minggu': 'Sun'
     }
 
     month_dict = {
@@ -828,6 +687,7 @@ def feeddetik():
             d = d.replace(before, after)
 
         d = d.replace(' WIB', ':00 +0700')
+        d = d.replace('detikTravel | ', '')
         datetimes_.append(d)
 
     template = render_template('feeddetik.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
