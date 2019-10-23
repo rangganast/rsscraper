@@ -15,10 +15,10 @@
         <guid>{{links[i]}}</guid>
         <pubDate>{{datetimes[i]}}</pubDate>
         <description>
-        <![CDATA[
-        <img src="{{photo_links[i]}}">
-        {{paragraph[i]}}
-        ]]>
+            <![CDATA[
+            <img src="{{photo_links[i]}}">
+            {{paragraph[i]}}
+            ]]>
         </description>
     </item>{% endfor %}
 <atom:link href="https://travel-feed-coba.herokuapp.com/feed/detik" rel="self" type="application/rss+xml" />
