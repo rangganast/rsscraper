@@ -4,10 +4,6 @@
 <title>Travel-Feed Holahalo Beta</title>
 <link>https://travel-feed-coba.herokuapp.com</link>
 <description>Travel-Feed Holahalo Beta</description>
-<image>
-<title>Travel-Feed Holahalo Beta</title>
-<link>https://travel-feed-coba.herokuapp.com</link>
-<url>https://www.collaboration133.com/wp-content/uploads/2011/06/rss.gif</url></image>
 {% for i in range(links|length) %}
 <item>
 <title>{{titles[i]}}</title>
