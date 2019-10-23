@@ -16,7 +16,7 @@
             <guid>{{links[i]}}</guid>
             <pubDate>{{datetimes[i]}}</pubDate>
             <description>
-                <img src="{{photo_links[i]}}"/>
+                <img src="{{photo_links[i]}}"></img>>
                 <![CDATA[{{paragraph[i]}}]]>
             </description>
         </item>
