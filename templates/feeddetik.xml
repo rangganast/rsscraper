@@ -3,8 +3,7 @@
 <channel>
     <title>Travel-Feed Holahalo Beta</title>
     <link>https://travel-feed-coba.herokuapp.com</link>
-    <description>Travel-Feed Holahalo Beta</description>
-{% for i in range(links|length) %}
+    <description>Travel-Feed Holahalo Beta</description>{% for i in range(links|length) %}
     <item>
         <title>{{titles[i]}}</title>
         <link>{{links[i]}}</link>
@@ -16,8 +15,7 @@
         {{paragraph[i]}}
         ]]>
         </description>
-    </item>
-{% endfor %}
+    </item>{% endfor %}
 <atom:link href="https://travel-feed-coba.herokuapp.com/feed/detik" rel="self" type="application/rss+xml" />
 </channel>
 </rss>

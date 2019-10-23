@@ -4,7 +4,7 @@
     <title>Travel-Feed Holahalo Beta</title>
     <link>https://travel-feed-coba.herokuapp.com</link>
     <description>Travel-Feed Holahalo Beta</description>{% for i in range(links|length) %}
-<item>
+    <item>
         <title>{{titles[i]}}</title>
         <link>{{links[i]}}</link>
         <guid>{{links[i]}}</guid>
