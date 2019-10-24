@@ -17,7 +17,6 @@
         <description>
             <![CDATA[
             <img src="{{photo_links[i]}}">
-            {{paragraph[i]}}
             ]]>
         </description>
     </item>{% endfor %}
