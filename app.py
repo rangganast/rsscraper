@@ -495,7 +495,7 @@ def feedkompas():
         for i in text_div:
             if i.findAll('p')[0].text == '':
                 paragraph.append(i.findAll('p')[1].text)
-            elif i.findAll('p')[0] == chr(255):
+            elif i.findAll('p')[0].text == u'\xa0':
                 paragraph.append(i.findAll('p')[1].text)
             else:
                 paragraph.append(i.findAll('p')[0].text)
@@ -549,11 +549,10 @@ def feedkompas():
 
         d = d.replace(' WIB', ':00 +0700')
 
-        for before, after in check_dict.items():
-            d_ = d.replace(before, after)
-            day = datetime.datetime.strptime(d_[:-16], '%d %B %Y').strftime('%a')
-            d_final = day + ", " + d
-            d_final = d_final.replace('2019,', '2019')
+        d_ = ' '.join([check_dict.get(i, i) for i in d.split()])
+        day = datetime.datetime.strptime(d_[:-16], '%d %B %Y').strftime('%a')
+        d_final = day + ", " + d
+        d_final = d_final.replace('2019,', '2019')
 
         datetimes_.append(d_final)
 
