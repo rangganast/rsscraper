@@ -830,7 +830,7 @@ def feedkumparan():
     #     d = d.replace(' WIB', ':00 +0700')
     #     datetimes_.append(d)
 
-    template = render_template('feedkumparan.xml', links=links_, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
+    template = render_template('feedkumparan.xml', links=links_, titles=titles, photo_links=photo_links, datetimes=datetimes, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
 
