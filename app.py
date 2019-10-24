@@ -4,6 +4,7 @@ import urllib
 import urllib3
 import re
 import datetime
+import pickle
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = 'super secret key'
@@ -69,41 +70,6 @@ def detik():
     # Send Variables to html template
     return render_template('detik.html', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes, paragraph=paragraph)
 
-@app.route('/cnn')
-def cnn():
-    # Get URL
-    url = 'https://www.cnnindonesia.com/gaya-hidup/wisata'
-    req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
-    con = urllib.request.urlopen(req)
-    soup = BeautifulSoup(con.read(), 'lxml')
-
-    titles = []
-    links = []
-    photo_links = []
-
-    # Get Content div
-    news_contents = soup.find(
-        'div', {'class': 'list media_rows middle'}).findAll('article')
-
-    for article in news_contents:
-
-        # Get Title
-        for i in article.findAll('h1', {'class': 'title'}):
-            titles.append(i.text)
-
-        # Get Link
-        link = article.findAll('a')
-        for i in link:
-            links.append(i['href'])
-
-        # Get Image
-        img = article.findAll('img')
-        for i in img:
-            photo_links.append(i['src'])
-
-    # Send Variables to html template
-    return render_template('cnn.html', links=links, titles=titles, photo_links=photo_links)
-
 @app.route('/kompas', methods=['GET', 'POST'])
 def kompas():
     # Get URL
@@ -159,44 +125,6 @@ def kompas():
 
     # Send Variables to html template
     return render_template('kompas.html', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes, paragraph=paragraph)
-
-@app.route('/jakartapost')
-def jakartapost():
-    # Get URL
-    url = 'https://www.thejakartapost.com/travel/news'
-    req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
-    con = urllib.request.urlopen(req)
-    soup = BeautifulSoup(con.read(), 'lxml')
-
-    titles = []
-    links = []
-    photo_links = []
-
-    # Find content div
-    news_contents = soup.find_all(
-        'div', {'class': 'col-md-9 col-xs-12 tjp-Travel-entry'})
-
-    for article in news_contents:
-        # Find Title
-        for text_div in article.findAll('div', {'class': 'detail-latest'}):
-            for i in text_div.findAll('a')[1]:
-                for title in i:
-                    if title != '\n':
-                        titles.append(title.strip())
-
-        # Find Link
-        for photo_div in article.findAll('div', {'class': 'image-latest'}):
-            for link in photo_div.findAll('a'):
-                links.append(link['href'])
-
-        # Find Image
-        for photo_div in article.findAll('div', {'class': 'image-latest'}):
-            for i in photo_div.findAll('a'):
-                for img in i.findAll('img', src=True):
-                    photo_links.append(img['data-src'])
-    
-    # Send Variables to html template
-    return render_template('jakartapost.html', links=links, titles=titles, photo_links=photo_links)
 
 @app.route('/tempo', methods=['GET', 'POST'])
 def tempo():
@@ -578,7 +506,7 @@ def feedkompas():
     'Senin': 'Mon',
     'Selasa': 'Tue',
     'Rabu': 'Wed',
-    'Kamis': 'Thue',
+    'Kamis': 'Thu',
     "Jum'at": 'Fri',
     'Sabtu': 'Sat',
     'Minggu': 'Sun'
@@ -600,7 +528,16 @@ def feedkompas():
     }
 
     check_dict = {
-        'Oct': 'October'
+        'Jan': 'January',
+        'Feb': 'February',
+        'Mar': 'March',
+        'Jun': 'June',
+        'Jul': 'July',
+        'Aug': 'August',
+        'Sep': 'September',
+        'Oct': 'October',
+        'Nov': 'November',
+        'Dec': 'December'
     }
 
     for d in datetimes:
@@ -750,13 +687,13 @@ def feedtempo():
     datetimes_ = []
 
     day_dict = {
-    'Senin': 'Mon',
-    'Selasa': 'Tue',
-    'Rabu': 'Wed',
-    'Kamis': 'Thue',
-    "Jum'at": 'Fri',
-    'Sabtu': 'Sat',
-    'Minggu': 'Sun'
+        'Senin': 'Mon',
+        'Selasa': 'Tue',
+        'Rabu': 'Wed',
+        'Kamis': 'Thue',
+        "Jum'at": 'Fri',
+        'Sabtu': 'Sat',
+        'Minggu': 'Sun'
     }
 
     month_dict = {
@@ -775,7 +712,16 @@ def feedtempo():
     }
 
     check_dict = {
-        'Oct': 'October'
+        'Jan': 'January',
+        'Feb': 'February',
+        'Mar': 'March',
+        'Jun': 'June',
+        'Jul': 'July',
+        'Aug': 'August',
+        'Sep': 'September',
+        'Oct': 'October',
+        'Nov': 'November',
+        'Dec': 'December'
     }
 
     for d in datetimes:
@@ -794,7 +740,95 @@ def feedtempo():
 
         datetimes_.append(d_final)
 
+    itemlist = [titles, links, photo_links, datetimes_, paragraph]
+
     template = render_template('feedtempo.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
+    response = make_response(template)
+    response.headers['Content-Type'] = 'application/xml'
+
+    return response
+
+@app.route('/feed/kumparan')
+def feedkumparan():
+    url = 'https://kumparan.com/kumparantravel'
+    req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
+    con = urllib.request.urlopen(req)
+    soup = BeautifulSoup(con.read(), 'lxml')
+
+    titles = []
+    links = []
+    photo_links = []
+    datetimes = []
+    paragraph = []
+
+    news_contents = soup.find_all('div', {'class': 'Viewweb__StyledView-sc-61094a-0 fPqoSZ'})
+
+    for i in news_contents:
+        soup2 = BeautifulSoup(str(i), 'lxml')
+
+        divs = soup2.findAll('div', {'class': 'Viewweb__StyledView-sc-61094a-0 fNfbQb'})
+        for div in divs:
+            title = div.findAll('h2', {'class': 'Textweb__StyledText-sc-2upo8d-0 msdeg'})
+            for t in title:
+                titles.append(t.text)
+                link = t.find('a')['href']
+                links.append(link)
+
+        image_div = soup2.findAll('img', {'class': 'no-script'})
+        for i in image_div:
+            photo_links.append(i['src'])
+
+    links_ = []
+
+    for i in links:
+        url = 'https://kumparan.com' + i
+        req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
+        con = urllib.request.urlopen(req)
+        soup3 = BeautifulSoup(con.read(), 'lxml')
+
+        d_times = soup3.findAll('div', {'class': 'Viewweb__StyledView-sc-61094a-0 bBekbp'})
+        for d in d_times:
+            times = d.findAll('div', {'class': 'TextBoxweb__StyledTextBox-n41hy7-0 duIFRd'})
+            for t in times:
+                spans = t.findAll('span', {'class': 'Textweb__StyledText-sc-2upo8d-0 ceLXoP'})
+                for s in spans:
+                    datetimes.append(s.text)
+
+        par_div = soup3.findAll('span', {'class': 'Textweb__StyledText-sc-2upo8d-0 dxEmzN'})
+        for p in par_div:
+            paragraph.append(p.text)
+
+        links_.append(url)
+
+    datetimes_ = []
+
+    day_dict = {
+        'Senin': 'Mon',
+        'Selasa': 'Tue',
+        'Rabu': 'Wed',
+        'Kamis': 'Thue',
+        "Jum'at": 'Fri',
+        'Sabtu': 'Sat',
+        'Minggu': 'Sun'
+    }
+
+    month_dict = {
+        'Agu': 'Aug',
+        'Okt': 'Oct',
+        'Des': 'Dec'
+    }
+
+    for d in datetimes:
+        for before, after in day_dict.items():
+            d = d.replace(before, after)
+
+        for before, after in month_dict.items():
+            d = d.replace(before, after)
+        
+        d = d.replace(' WIB', ':00 +0700')
+        datetimes_.append(d)
+
+    template = render_template('feedkumparan.xml', links=links_, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
 
