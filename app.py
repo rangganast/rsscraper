@@ -779,54 +779,56 @@ def feedkumparan():
             photo_links.append(i['src'])
 
     links_ = []
+    for link in links:
+        links_.append('https://kumparan.com' + link)
 
-    for i in links:
-        url = 'https://kumparan.com' + i
-        req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
-        con = urllib.request.urlopen(req)
-        soup3 = BeautifulSoup(con.read(), 'lxml')
+    # for i in links:
+    #     url = 'https://kumparan.com' + i
+    #     req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
+    #     con = urllib.request.urlopen(req)
+    #     soup3 = BeautifulSoup(con.read(), 'lxml')
 
-        d_times = soup3.findAll('div', {'class': 'Viewweb__StyledView-sc-61094a-0 bBekbp'})
-        for d in d_times:
-            times = d.findAll('div', {'class': 'TextBoxweb__StyledTextBox-n41hy7-0 duIFRd'})
-            for t in times:
-                spans = t.findAll('span', {'class': 'Textweb__StyledText-sc-2upo8d-0 ceLXoP'})
-                for s in spans:
-                    datetimes.append(s.text)
+    #     d_times = soup3.findAll('div', {'class': 'Viewweb__StyledView-sc-61094a-0 bBekbp'})
+    #     for d in d_times:
+    #         times = d.findAll('div', {'class': 'TextBoxweb__StyledTextBox-n41hy7-0 duIFRd'})
+    #         for t in times:
+    #             spans = t.findAll('span', {'class': 'Textweb__StyledText-sc-2upo8d-0 ceLXoP'})
+    #             for s in spans:
+    #                 datetimes.append(s.text)
 
-        par_div = soup3.findAll('span', {'class': 'Textweb__StyledText-sc-2upo8d-0 dxEmzN'})
-        for p in par_div:
-            paragraph.append(p.text)
+    #     par_div = soup3.findAll('span', {'class': 'Textweb__StyledText-sc-2upo8d-0 dxEmzN'})
+    #     for p in par_div:
+    #         paragraph.append(p.text)
 
-        links_.append(url)
+    #     links_.append(url)
 
-    datetimes_ = []
+    # datetimes_ = []
 
-    day_dict = {
-        'Senin': 'Mon',
-        'Selasa': 'Tue',
-        'Rabu': 'Wed',
-        'Kamis': 'Thue',
-        "Jum'at": 'Fri',
-        'Sabtu': 'Sat',
-        'Minggu': 'Sun'
-    }
+    # day_dict = {
+    #     'Senin': 'Mon',
+    #     'Selasa': 'Tue',
+    #     'Rabu': 'Wed',
+    #     'Kamis': 'Thue',
+    #     "Jum'at": 'Fri',
+    #     'Sabtu': 'Sat',
+    #     'Minggu': 'Sun'
+    # }
 
-    month_dict = {
-        'Agu': 'Aug',
-        'Okt': 'Oct',
-        'Des': 'Dec'
-    }
+    # month_dict = {
+    #     'Agu': 'Aug',
+    #     'Okt': 'Oct',
+    #     'Des': 'Dec'
+    # }
 
-    for d in datetimes:
-        for before, after in day_dict.items():
-            d = d.replace(before, after)
+    # for d in datetimes:
+    #     for before, after in day_dict.items():
+    #         d = d.replace(before, after)
 
-        for before, after in month_dict.items():
-            d = d.replace(before, after)
+    #     for before, after in month_dict.items():
+    #         d = d.replace(before, after)
         
-        d = d.replace(' WIB', ':00 +0700')
-        datetimes_.append(d)
+    #     d = d.replace(' WIB', ':00 +0700')
+    #     datetimes_.append(d)
 
     template = render_template('feedkumparan.xml', links=links_, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
     response = make_response(template)
