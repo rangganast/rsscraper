@@ -732,10 +732,9 @@ def feedtempo():
 
         d = d.replace(' WIB', ':00 +0700')
 
-        for before, after in check_dict.items():
-            d_ = d.replace(before, after)
-            day = datetime.datetime.strptime(d_[:-15], '%d %B %Y').strftime('%a')
-            d_final = day + ", " + d
+        d_ = ' '.join([check_dict.get(i, i) for i in d.split()])
+        day = datetime.datetime.strptime(d_[:-15], '%d %B %Y').strftime('%a')
+        d_final = day + ", " + d
 
         datetimes_.append(d_final)
 
