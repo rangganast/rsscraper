@@ -689,7 +689,7 @@ def feedtempo():
         'Senin': 'Mon',
         'Selasa': 'Tue',
         'Rabu': 'Wed',
-        'Kamis': 'Thue',
+        'Kamis': 'Thu',
         "Jum'at": 'Fri',
         'Sabtu': 'Sat',
         'Minggu': 'Sun'
@@ -804,7 +804,7 @@ def feedkumparan():
         'Senin': 'Mon',
         'Selasa': 'Tue',
         'Rabu': 'Wed',
-        'Kamis': 'Thue',
+        'Kamis': 'Thu',
         "Jum'at": 'Fri',
         'Sabtu': 'Sat',
         'Minggu': 'Sun'
@@ -879,7 +879,7 @@ def feedkompasiana():
         'Senin': 'Mon',
         'Selasa': 'Tue',
         'Rabu': 'Wed',
-        'Kamis': 'Thue',
+        'Kamis': 'Thu',
         "Jum'at": 'Fri',
         'Sabtu': 'Sat',
         'Minggu': 'Sun'
@@ -995,7 +995,7 @@ def feedtripcanvas():
         'Senin': 'Mon',
         'Selasa': 'Tue',
         'Rabu': 'Wed',
-        'Kamis': 'Thue',
+        'Kamis': 'Thu',
         "Jum'at": 'Fri',
         'Sabtu': 'Sat',
         'Minggu': 'Sun'
@@ -1100,7 +1100,7 @@ def feedtripcanvasindo():
         'Senin': 'Mon',
         'Selasa': 'Tue',
         'Rabu': 'Wed',
-        'Kamis': 'Thue',
+        'Kamis': 'Thu',
         "Jum'at": 'Fri',
         'Sabtu': 'Sat',
         'Minggu': 'Sun'
