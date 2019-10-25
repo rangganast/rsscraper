@@ -1146,7 +1146,7 @@ def feedtripcanvasindo():
 
     return response
 
-@app.route('/feed/mytrip123')
+@app.route('/feed/mytrip')
 def feedmytrip123():
     url = 'https://mytrip123.com/'
     req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
