@@ -1035,7 +1035,7 @@ def feedtripcanvas():
 
         datetimes_.append(d_final)
  
-    template = render_template('feedtripcanvasindo.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
+    template = render_template('feedtripcanvas.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
 
