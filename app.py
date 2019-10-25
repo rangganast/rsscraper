@@ -5,6 +5,7 @@ import urllib3
 import re
 import datetime
 import pickle
+import string
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = 'super secret key'
@@ -493,12 +494,7 @@ def feedkompas():
 
         text_div = soup2.findAll('div', {'class': 'read__content'})
         for i in text_div:
-            if i.findAll('p')[0].text == '':
-                paragraph.append(i.findAll('p')[1].text)
-            elif i.findAll('p')[0].text == u'\xa0':
-                paragraph.append(i.findAll('p')[1].text)
-            else:
-                paragraph.append(i.findAll('p')[0].text)
+            paragraph.append(i.findAll('p')[1].text)
 
     datetimes_ = []
 
@@ -1177,11 +1173,118 @@ def feedmytrip123():
         for t in text_div:
             paragraph.append(t.text)
     
-    template = render_template('feedmytrip123.xml', news_contents=news_contents, links=links, titles=titles, photo_links=photo_links, paragraph=paragraph)
+    template = render_template('feedmytrip123.xml', links=links, titles=titles, photo_links=photo_links, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
 
     return response
-    
+
+@app.route('/feed/hipwee')
+def fseedhipwee():
+    url = 'https://www.hipwee.com/events/'
+    req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
+    con = urllib.request.urlopen(req)
+    soup = BeautifulSoup(con.read(), 'lxml')
+
+    titles = []
+    links = []
+    photo_links = []
+    paragraph = []
+    datetimes = []
+
+    news_contents = soup.find_all('article', {'class', 'archive-base top top-event'})
+
+    for i in news_contents:
+        soup2 = BeautifulSoup(str(i), 'lxml')
+        
+        image_div = soup2.findAll('div', {'class': 'image-post'})
+        for div in image_div:
+            a_div = div.findAll('a')
+            links.append(a_div[0]['href'])
+
+            for a in a_div:
+                img_div = a.findAll('img')
+                for img in img_div:
+                    photo_links.append(img['src'])  
+
+        title_div = soup2.findAll('h2', {'class': 'post-title'})
+        for div in title_div:
+            a_div = div.findAll('a')
+            for a in a_div:
+                titles.append(a.text)
+
+        par_div = soup2.findAll('div', {'class': 'post-excerpt'})
+        for div in par_div:
+            p_div = div.findAll('p')
+            paragraph.append(p_div[0].text)
+
+    #     date_div = soup2.findAll('div', {'class': 'event-entry'})
+    #     for div in date_div:
+    #         span_div = soup2.findAll('span')
+    #         datetimes.append(span_div[0].text.rstrip())
+
+    # datetimes_ = []
+
+    # day_dict = {
+    #     'Senin': 'Mon',
+    #     'Selasa': 'Tue',
+    #     'Rabu': 'Wed',
+    #     'Kamis': 'Thu',
+    #     "Jum'at": 'Fri',
+    #     'Sabtu': 'Sat',
+    #     'Minggu': 'Sun'
+    # }
+
+    # month_dict = {
+    #     'Januari': 'Jan',
+    #     'Februari': 'Feb',
+    #     'Maret': 'Mar',
+    #     'April': 'Apr',
+    #     'Mei': 'May',
+    #     'Juni': 'Jun',
+    #     'Juli': 'Jul',
+    #     'Agustus': 'Aug',
+    #     'September': 'Sep',
+    #     'Oktober': 'Oct',
+    #     'November': 'Nov',
+    #     'Desember': 'Dec',
+    # }
+
+    # check_dict = {
+    #     'Jan': 'January',
+    #     'Feb': 'February',
+    #     'Mar': 'March',
+    #     'Jun': 'June',
+    #     'Jul': 'July',
+    #     'Aug': 'August',
+    #     'Sep': 'September',
+    #     'Oct': 'October',
+    #     'Nov': 'November',
+    #     'Dec': 'December'
+    # }
+
+    # for d in datetimes:
+    #     d = d.replace("\n","")
+    #     d = d.replace("\t","")
+    #     d = d[1:]
+
+    #     for before, after in month_dict.items():
+    #         d = d.replace(before, after)
+        
+    #     d = d + ' 00:00:00 +0700'
+
+    #     d_ = ' '.join([check_dict.get(i, i) for i in d.split()])
+    #     day = datetime.datetime.strptime(d_[:17], '%d %B %Y').strftime('%a')
+    #     d_final = day + ", " + d
+
+    #     datetimes_.append(d_)
+
+    template = render_template('feedhipwee.xml', links=links, titles=titles, photo_links=photo_links, paragraph=paragraph)
+    response = make_response(template)
+    response.headers['Content-Type'] = 'application/xml'
+
+    return response      
+
 if __name__ == '__main__':
     app.run(debug=True)
+
