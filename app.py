@@ -1180,7 +1180,7 @@ def feedmytrip123():
     return response
 
 @app.route('/feed/hipwee')
-def fseedhipwee():
+def feedhipwee():
     url = 'https://www.hipwee.com/events/'
     req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
     con = urllib.request.urlopen(req)
@@ -1217,67 +1217,6 @@ def fseedhipwee():
         for div in par_div:
             p_div = div.findAll('p')
             paragraph.append(p_div[0].text)
-
-    #     date_div = soup2.findAll('div', {'class': 'event-entry'})
-    #     for div in date_div:
-    #         span_div = soup2.findAll('span')
-    #         datetimes.append(span_div[0].text.rstrip())
-
-    # datetimes_ = []
-
-    # day_dict = {
-    #     'Senin': 'Mon',
-    #     'Selasa': 'Tue',
-    #     'Rabu': 'Wed',
-    #     'Kamis': 'Thu',
-    #     "Jum'at": 'Fri',
-    #     'Sabtu': 'Sat',
-    #     'Minggu': 'Sun'
-    # }
-
-    # month_dict = {
-    #     'Januari': 'Jan',
-    #     'Februari': 'Feb',
-    #     'Maret': 'Mar',
-    #     'April': 'Apr',
-    #     'Mei': 'May',
-    #     'Juni': 'Jun',
-    #     'Juli': 'Jul',
-    #     'Agustus': 'Aug',
-    #     'September': 'Sep',
-    #     'Oktober': 'Oct',
-    #     'November': 'Nov',
-    #     'Desember': 'Dec',
-    # }
-
-    # check_dict = {
-    #     'Jan': 'January',
-    #     'Feb': 'February',
-    #     'Mar': 'March',
-    #     'Jun': 'June',
-    #     'Jul': 'July',
-    #     'Aug': 'August',
-    #     'Sep': 'September',
-    #     'Oct': 'October',
-    #     'Nov': 'November',
-    #     'Dec': 'December'
-    # }
-
-    # for d in datetimes:
-    #     d = d.replace("\n","")
-    #     d = d.replace("\t","")
-    #     d = d[1:]
-
-    #     for before, after in month_dict.items():
-    #         d = d.replace(before, after)
-        
-    #     d = d + ' 00:00:00 +0700'
-
-    #     d_ = ' '.join([check_dict.get(i, i) for i in d.split()])
-    #     day = datetime.datetime.strptime(d_[:17], '%d %B %Y').strftime('%a')
-    #     d_final = day + ", " + d
-
-    #     datetimes_.append(d_)
 
     template = render_template('feedhipwee.xml', links=links, titles=titles, photo_links=photo_links, paragraph=paragraph)
     response = make_response(template)
