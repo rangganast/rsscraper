@@ -614,7 +614,7 @@ def feeddetik():
         'Senin': 'Mon',
         'Selasa': 'Tue',
         'Rabu': 'Wed',
-        'Kamis': 'Thue',
+        'Kamis': 'Thu',
         "Jumat": 'Fri',
         'Sabtu': 'Sat',
         'Minggu': 'Sun'
