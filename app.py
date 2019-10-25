@@ -1224,6 +1224,52 @@ def feedhipwee():
 
     return response      
 
+@app.route('/feed/tirto')
+def tirto():
+    url = 'https://tirto.id/indeks'
+    req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
+    con = urllib.request.urlopen(req)
+    soup = BeautifulSoup(con.read(), 'lxml')
+
+    titles = []
+    links = []
+    photo_links = []
+    paragraph = []
+    datetimes = []
+
+    news_contents = soup.find_all('article', {'class', 'col-md-4 mb-4 news-list-fade'})
+
+    for i in news_contents:
+        soup2 = BeautifulSoup(str(i), 'lxml')
+
+        a_div = soup2.findAll('a')
+        links.append(a_div[0]['href'])
+        
+        for a in a_div:
+            title_div = soup2.findAll('h1')
+            for title in title_div:
+                titles.append(title.text)
+
+            par_div = soup2.findAll('h6')
+            for par in par_div:
+                paragraph.append(par.text)
+
+        image_div = soup2.findAll('div', {'class': 'col-12 p-0 relative hidden-over'})
+        for div in image_div:
+            a_div = div.findAll('a')
+            links.append(a_div[0]['href'])
+
+            for a in a_div:
+                img_div = a.findAll('img')
+                for img in img_div:
+                    photo_links.append(img['src'])
+
+    template = render_template('feedtirto.xml', news_contents=news_contents, links=links, titles=titles, photo_links=photo_links, paragraph=paragraph)
+    response = make_response(template)
+    response.headers['Content-Type'] = 'application/xml'
+
+    return response
+
 if __name__ == '__main__':
     app.run(debug=True)
 
