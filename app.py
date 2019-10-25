@@ -615,7 +615,7 @@ def feeddetik():
         'Selasa': 'Tue',
         'Rabu': 'Wed',
         'Kamis': 'Thue',
-        "Jum'at": 'Fri',
+        "Jumat": 'Fri',
         'Sabtu': 'Sat',
         'Minggu': 'Sun'
     }
@@ -936,5 +936,252 @@ def feedkompasiana():
 
     return response
 
+@app.route('/feed/tripcanvas')
+def feedtripcanvas():
+    url = 'https://indonesia.tripcanvas.co/'
+    req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
+    con = urllib.request.urlopen(req)
+    soup = BeautifulSoup(con.read(), 'lxml')
+
+    titles = []
+    links = []
+    photo_links = []
+    datetimes = []
+    paragraph = []
+
+    news_contents = soup.find_all('div', {'class', 'no-top-margin grid grid-full section not-first-section has-title post-6069 type-section status-publish format-standard hentry'})
+
+    for i in news_contents:
+        soup2 = BeautifulSoup(str(i), 'lxml')
+
+        image_div = soup2.findAll('div', {'class': 'isobrick-inner'})
+        for div in image_div:
+            img = div.findAll('img')
+            for i in img:
+                photo_links.append(i['src'])
+
+        divs = soup2.findAll('h2', {'class': 'title'})
+        for div in divs:
+            a_div = div.findAll('a')
+            links.append(a_div[0]['href'])
+            titles.append(a_div[0]['title'])
+
+    datetimes_ = []
+
+    for i in links:
+        req = urllib.request.Request(i, headers={'User-Agent': "Magic Browser"})
+        con = urllib.request.urlopen(req)
+        soup3 = BeautifulSoup(con.read(), 'lxml')
+
+        par_div = soup3.findAll('div', {'class': 'postcontent content'})
+        for div in par_div:
+            par = div.findAll('h3')
+            paragraph.append(par[1].text)
+
+        date_div = soup3.findAll('div', {'class': 'date updated'})
+        for div in date_div:
+            d_times = div.findAll('p')
+            d_span = div.findAll('span')
+
+            d_times[0] = d_span[0]
+
+            dtime = ' '.join(i.text for i in d_times)
+
+            datetimes.append(dtime)
+
+        datetimes_ = []
+
+    day_dict = {
+        'Senin': 'Mon',
+        'Selasa': 'Tue',
+        'Rabu': 'Wed',
+        'Kamis': 'Thue',
+        "Jum'at": 'Fri',
+        'Sabtu': 'Sat',
+        'Minggu': 'Sun'
+    }
+
+    month_dict = {
+        'Agu': 'Aug',
+        'Okt': 'Oct',
+        'Des': 'Dec'
+    }
+
+    check_dict = {
+        'Jan': 'January',
+        'Feb': 'February',
+        'Mar': 'March',
+        'Jun': 'June',
+        'Jul': 'July',
+        'Aug': 'August',
+        'Sep': 'September',
+        'Oct': 'October',
+        'Nov': 'November',
+        'Dec': 'December'
+    }
+
+    for d in datetimes:
+        for before, after in day_dict.items():
+            d = d.replace(before, after)
+
+        for before, after in month_dict.items():
+            d = d.replace(before, after)
+
+        d += ' 00:00:00 +0700'
+
+        d_ = ' '.join([check_dict.get(i, i) for i in d.split()])
+        day = datetime.datetime.strptime(d_[:-15], '%d %B %Y').strftime('%a')
+        d_final = day + ", " + d
+
+        datetimes_.append(d_final)
+ 
+    template = render_template('feedtripcanvasindo.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
+    response = make_response(template)
+    response.headers['Content-Type'] = 'application/xml'
+
+    return response
+
+@app.route('/feed/tripcanvasindo')
+def feedtripcanvasindo():
+    url = 'https://indonesia.tripcanvas.co/id/'
+    req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
+    con = urllib.request.urlopen(req)
+    soup = BeautifulSoup(con.read(), 'lxml')
+
+    titles = []
+    links = []
+    photo_links = []
+    datetimes = []
+    paragraph = []
+
+    news_contents = soup.find_all('div', {'class', 'no-top-margin grid grid-full section not-first-section has-title post-6069 type-section status-publish format-standard hentry'})
+
+    for i in news_contents:
+        soup2 = BeautifulSoup(str(i), 'lxml')
+
+        image_div = soup2.findAll('div', {'class': 'isobrick-inner'})
+        for div in image_div:
+            img = div.findAll('img')
+            for i in img:
+                photo_links.append(i['src'])
+
+        divs = soup2.findAll('h2', {'class': 'title'})
+        for div in divs:
+            a_div = div.findAll('a')
+            links.append(a_div[0]['href'])
+            titles.append(a_div[0]['title'])
+
+    datetimes_ = []
+
+    for i in links:
+        req = urllib.request.Request(i, headers={'User-Agent': "Magic Browser"})
+        con = urllib.request.urlopen(req)
+        soup3 = BeautifulSoup(con.read(), 'lxml')
+
+        par_div = soup3.findAll('div', {'class': 'postcontent content'})
+        for div in par_div:
+            par = div.findAll('h3')
+            paragraph.append(par[1].text)
+
+        date_div = soup3.findAll('div', {'class': 'date updated'})
+        for div in date_div:
+            d_times = div.findAll('p')
+            d_span = div.findAll('span')
+
+            d_times[0] = d_span[0]
+
+            dtime = ' '.join(i.text for i in d_times)
+
+            datetimes.append(dtime)
+
+        datetimes_ = []
+
+    day_dict = {
+        'Senin': 'Mon',
+        'Selasa': 'Tue',
+        'Rabu': 'Wed',
+        'Kamis': 'Thue',
+        "Jum'at": 'Fri',
+        'Sabtu': 'Sat',
+        'Minggu': 'Sun'
+    }
+
+    month_dict = {
+        'Agu': 'Aug',
+        'Okt': 'Oct',
+        'Des': 'Dec'
+    }
+
+    check_dict = {
+        'Jan': 'January',
+        'Feb': 'February',
+        'Mar': 'March',
+        'Jun': 'June',
+        'Jul': 'July',
+        'Aug': 'August',
+        'Sep': 'September',
+        'Oct': 'October',
+        'Nov': 'November',
+        'Dec': 'December'
+    }
+
+    for d in datetimes:
+        for before, after in day_dict.items():
+            d = d.replace(before, after)
+
+        for before, after in month_dict.items():
+            d = d.replace(before, after)
+
+        d += ' 00:00:00 +0700'
+
+        d_ = ' '.join([check_dict.get(i, i) for i in d.split()])
+        day = datetime.datetime.strptime(d_[:-15], '%d %B %Y').strftime('%a')
+        d_final = day + ", " + d
+
+        datetimes_.append(d_final)
+ 
+    template = render_template('feedtripcanvasindo.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
+    response = make_response(template)
+    response.headers['Content-Type'] = 'application/xml'
+
+    return response
+
+@app.route('/feed/mytrip123')
+def feedmytrip123():
+    url = 'https://mytrip123.com/'
+    req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
+    con = urllib.request.urlopen(req)
+    soup = BeautifulSoup(con.read(), 'lxml')
+
+    titles = []
+    links = []
+    photo_links = []
+    paragraph = []
+
+    news_contents = soup.find_all('div', {'class', 'td_module_11 td_module_wrap td-animation-stack'})
+
+    for i in news_contents:
+        soup2 = BeautifulSoup(str(i), 'lxml')
+
+        image_div = soup2.findAll('div', {'class': 'td-module-thumb'})
+        for div in image_div:
+            a_div = div.findAll('a')
+            links.append(a_div[0]['href'])
+            titles.append(a_div[0]['title'])
+
+            for a in a_div:
+                img = a.findAll('img')
+                photo_links.append(img[0]['src'])
+
+        text_div = soup2.findAll('div', {'class': 'td-excerpt'})
+        for t in text_div:
+            paragraph.append(t.text)
+    
+    template = render_template('feedmytrip123.xml', news_contents=news_contents, links=links, titles=titles, photo_links=photo_links, paragraph=paragraph)
+    response = make_response(template)
+    response.headers['Content-Type'] = 'application/xml'
+
+    return response
+    
 if __name__ == '__main__':
     app.run(debug=True)
