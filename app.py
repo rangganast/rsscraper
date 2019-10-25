@@ -696,18 +696,18 @@ def feedtempo():
     }
 
     month_dict = {
-        'Januari': ' Jan ',
-        'Februari': ' Feb ',
-        'Maret': ' Mar ',
-        'April': ' Apr ',
-        'Mei': ' May ',
-        'Juni': ' Jun ',
-        'Juli': ' Jul ',
-        'Agustus': ' Aug ',
-        'September': ' Sep ',
-        'Oktober': ' Oct ',
-        'November': ' Nov ',
-        'Desember': ' Dec ',
+        'Januari': 'Jan',
+        'Februari': 'Feb',
+        'Maret': 'Mar',
+        'April': 'Apr',
+        'Mei': 'May',
+        'Juni': 'Jun',
+        'Juli': 'Jul',
+        'Agustus': 'Aug',
+        'September': 'Sep',
+        'Oktober': 'Oct',
+        'November': 'Nov',
+        'Desember': 'Dec',
     }
 
     check_dict = {
