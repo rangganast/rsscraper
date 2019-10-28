@@ -14,15 +14,14 @@
             <title>{{titles[i]}}</title>
             <link>{{links[i]}}</link>
             <guid>{{links[i]}}</guid>
-            <pubDate>{{datetimes[i]}}</pubDate>
             <description>
                 <![CDATA[
-            <img src="{{photo_links[i]}}">
-            {{paragraph[i]}}
-            ]]>
+                <img src="{{photo_links[i]}}">
+                {{paragraph[i]}}
+                ]]>
             </description>
         </item>
         {% endfor %}
-        <atom:link href="https://travel-feed-coba.herokuapp.com/feed/tirto" rel="self" type="application/rss+xml" />
+        <atom:link href="https://travel-feed-coba.herokuapp.com/feed/hipwee" rel="self" type="application/rss+xml" />
     </channel>
 </rss>
