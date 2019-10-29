@@ -480,6 +480,7 @@ def feedkompasiana():
         d_ = ' '.join([check_dict.get(i, i) for i in d.split()])
         day = datetime.datetime.strptime(d_[:15], '%d %B %Y').strftime('%a')
         d_final = day + ", " + d
+        d_final = d_final.replace('  ', ' ')
 
         datetimes_.append(d_final)
 
@@ -1597,6 +1598,8 @@ def feedidntimes():
 
     for i in news_contents:
         soup2 = BeautifulSoup(str(i), 'lxml')
+
+        if l
 
         a_div = soup2.findAll('a')
         links.append(a_div[0]['href'])
