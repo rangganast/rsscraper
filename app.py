@@ -1606,14 +1606,14 @@ def feedidntimes():
                 for title in title_div:
                     titles.append(title.text)
 
-    # for link in links:                    
-    #     req = urllib.request.Request(link, headers={'User-Agent': "Magic Browser"})
-    #     con = urllib.request.urlopen(req)
-    #     soup3 = BeautifulSoup(con.read(), 'lxml')
+    for link in links:                    
+        req = urllib.request.Request(link, headers={'User-Agent': "Magic Browser"})
+        con = urllib.request.urlopen(req)
+        soup3 = BeautifulSoup(con.read(), 'lxml')
 
-    #     par_div = soup3.findAll('div', {'class': 'excerpt'})
-    #     for par in par_div:
-    #         paragraph.append(par.text)
+        par_div = soup3.findAll('div', {'class': 'excerpt'})
+        for par in par_div:
+            paragraph.append(par.text)
 
     datetimes_ = []
 
