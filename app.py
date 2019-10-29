@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, url_for, redirect, make_response, session
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Comment
 import urllib
 import urllib3
 import re
@@ -1174,16 +1174,6 @@ def feedokezone():
 
     datetimes_ = []
 
-    day_dict = {
-        'Senin': 'Mon,',
-        'Selasa': 'Tue,',
-        'Rabu': 'Wed,',
-        'Kamis': 'Thu,',
-        "Jum'at": 'Fri,',
-        'Sabtu': 'Sat,',
-        'Minggu': 'Sun,'
-    }
-
     month_dict = {
         'Januari': 'Jan',
         'Februari': 'Feb',
@@ -1686,7 +1676,7 @@ def tribunnews():
     for i in news_contents:
         soup2 = BeautifulSoup(str(i), 'lxml')
 
-        if len(links) < 11:
+        if len(links) < 10:
             divs = soup2.findAll('div')
 
             a_div = divs[0].findAll('a')
@@ -1757,6 +1747,9 @@ def tribunnews():
 
         d_ += ' +0700'
 
+        if d[:2].isdigit() == False:
+            d = '0' + d
+
         d__ = ' '.join([check_dict.get(i, i) for i in d_.split()])
         day = datetime.datetime.strptime(d__[:-15], '%d %B %Y').strftime('%a')
         d_final = day + ", " + d_
@@ -1769,7 +1762,411 @@ def tribunnews():
 
     return response
 
-# @app.route('/feed/')
+@app.route('/feed/jakartapost')
+def jakartapost():
+    url = 'https://www.thejakartapost.com/travel'
+    req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
+    con = urllib.request.urlopen(req)
+    soup = BeautifulSoup(con.read(), 'lxml')
+    
+    titles = []
+    links = []
+    photo_links = []
+    paragraph = []
+    datetimes = []
+
+    news_contents = soup.findAll('ul', {'id': 'tjp-control-paging'})
+
+    soup2 = BeautifulSoup(str(news_contents), 'lxml')
+    contents = soup2.find_all('li')
+
+    for i in contents:
+        image_div = i.findAll('div', {'class': 'image-latest'})
+        for div in image_div:
+            a_div = div.findAll('a')
+            links.append(a_div[0]['href'])
+
+            for div in a_div:
+                img_div = div.findAll('img')
+                photo_links.append(img_div[0]['data-src'])
+
+        content_div = i.findAll('div', {'class': 'detail-latest'})
+        for div in content_div:
+            a_div = div.findAll('a')
+            title_div = a_div[1].text
+            titles.append(title_div)
+
+            par_div = div.findAll('p')
+            paragraph.append(par_div[0].text)
+
+    for link in links:
+        req = urllib.request.Request(link, headers={'User-Agent': "Magic Browser"})
+        con = urllib.request.urlopen(req)
+        soup3 = BeautifulSoup(con.read(), 'lxml')
+
+        date_div = soup3.findAll('div', {'class': 'descrip'})
+        for date in date_div:
+            span_div = date.findAll('span')
+            datetimes.append(span_div[1].text + span_div[2].text)
+    
+    datetimes_ = []
+
+    month_dict = {
+        '01 ': 'Jan ',
+        '02 ': 'Feb ',
+        '03 ': 'Mar ',
+        '04 ': 'Apr ',
+        '05 ': 'May ',
+        '06 ': 'Jun ',
+        '07 ': 'Jul ',
+        '08 ': 'Aug ',
+        '09 ': 'Sep ',
+        '10 ': 'Oct ',
+        '11 ': 'Nov ',
+        '12 ': 'Dec ',
+    }
+
+    check_dict = {
+        'Jan': 'January',
+        'Feb': 'February',
+        'Mar': 'March',
+        'Jun': 'June',
+        'Jul': 'July',
+        'Aug': 'August',
+        'Sep': 'September',
+        'Oct': 'October',
+        'Nov': 'November',
+        'Dec': 'December'
+    }
+
+    # for d in datetimes:
+    #     d = d.replace(u'\xa0' + '/' + u'\xa0' + ' ', '')
+    #     d = d.replace(', 2', ' 2')
+
+    #     d = d[1:-1]
+
+    #     d_ = datetime.datetime.strptime(d[5:-9], "%M %d %Y")
+    #     d_ = d_.replace(d[5:-9], d_.strftime("%d %m %Y"))
+
+    #     if d[5:7].isdigit() == False:
+    #         d = d.replace(d[5], '0' + d[5])
+        
+    #     d_ = datetime.datetime.strptime(d[:10], "%Y-%m-%d")
+    #     d_ = d_.strftime("%d %m %Y") + d[10:]
+        
+    #     for before, after in month_dict.items():
+    #         d_ = d_.replace(before, after)
+
+    #     d_ += ' +0700'
+
+
+    #     d__ = ' '.join([check_dict.get(i, i) for i in d_.split()])
+    #     day = datetime.datetime.strptime(d__[:-15], '%d %B %Y').strftime('%a')
+    #     d_final = day + ", " + d_
+
+    #     datetimes_.append(d)
+    
+    template = render_template('feedjakartapost.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes, paragraph=paragraph)
+    response = make_response(template)
+    response.headers['Content-Type'] = 'application/xml'
+
+    return response
+
+@app.route('/feed/cnnwisata')
+def cnnwisata():
+    url = 'https://www.cnnindonesia.com/gaya-hidup/wisata'
+    req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
+    con = urllib.request.urlopen(req)
+    soup = BeautifulSoup(con.read(), 'lxml')
+
+    titles = []
+    links = []
+    photo_links = []
+    paragraph = []
+    datetimes = []
+
+    for a in soup.find_all('article', {'class': 'ads_native_d'}):
+        a.decompose()
+
+    news_contents = soup.find_all('div', {'class': 'list media_rows middle'})
+    for i in news_contents:
+        contents = i.findAll('article')
+
+        for content in contents:
+            if len(links) < 10:
+                soup2 = BeautifulSoup(str(content), 'lxml')
+
+                a_div = soup2.findAll('a')
+                links.append(a_div[0]['href'])
+                
+                span_div = a_div[0].findAll('span')
+
+                span_img = span_div[0].findAll('span')
+                img_div = span_img[0].findAll('img')
+
+                photo_links.append(img_div[0]['src'].split("?")[0])
+
+                title_div = span_div[2].findAll('h2')
+                for title in title_div:
+                    titles.append(title.text)
+
+                date_div = span_div[2].findAll('span', {'class': 'date'})
+                for date in date_div:
+                    comments = date.findAll(text=lambda text:isinstance(text, Comment))
+                    for comment in comments:
+                        datetimes.append(comment)
+
+    datetimes_ = []
+
+    month_dict = {
+        '01 ': 'Jan ',
+        '02 ': 'Feb ',
+        '03 ': 'Mar ',
+        '04 ': 'Apr ',
+        '05 ': 'May ',
+        '06 ': 'Jun ',
+        '07 ': 'Jul ',
+        '08 ': 'Aug ',
+        '09 ': 'Sep ',
+        '10 ': 'Oct ',
+        '11 ': 'Nov ',
+        '12 ': 'Dec ',
+    }
+
+    check_dict = {
+        'Jan': 'January',
+        'Feb': 'February',
+        'Mar': 'March',
+        'Jun': 'June',
+        'Jul': 'July',
+        'Aug': 'August',
+        'Sep': 'September',
+        'Oct': 'October',
+        'Nov': 'November',
+        'Dec': 'December'
+    }
+
+    for d in datetimes:
+        d_ = datetime.datetime.strptime(d[:10], "%Y-%m-%d")
+        d_ = d_.strftime("%d %m %Y") + d[10:]
+        
+        for before, after in month_dict.items():
+            d_ = d_.replace(before, after)
+
+        d_ += ' +0700'
+
+        if d[:2].isdigit() == False:
+            d = '0' + d
+
+        d__ = ' '.join([check_dict.get(i, i) for i in d_.split()])
+        day = datetime.datetime.strptime(d__[:-15], '%d %B %Y').strftime('%a')
+        d_final = day + ", " + d_
+
+        datetimes_.append(d_final)
+
+    template = render_template('feedcnnwisata.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
+    response = make_response(template)
+    response.headers['Content-Type'] = 'application/xml'
+
+    return response
+
+@app.route('/feed/cnnkuliner')
+def cnnkuliner():
+    url = 'https://www.cnnindonesia.com/gaya-hidup/wisata'
+    req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
+    con = urllib.request.urlopen(req)
+    soup = BeautifulSoup(con.read(), 'lxml')
+
+    titles = []
+    links = []
+    photo_links = []
+    paragraph = []
+    datetimes = []
+
+    for a in soup.find_all('article', {'class': 'ads_native_d'}):
+        a.decompose()
+
+    news_contents = soup.find_all('div', {'class': 'list media_rows middle'})
+    for i in news_contents:
+        contents = i.findAll('article')
+
+        for content in contents:
+            if len(links) < 10:
+                soup2 = BeautifulSoup(str(content), 'lxml')
+
+                a_div = soup2.findAll('a')
+                links.append(a_div[0]['href'])
+                
+                span_div = a_div[0].findAll('span')
+
+                span_img = span_div[0].findAll('span')
+                img_div = span_img[0].findAll('img')
+
+                photo_links.append(img_div[0]['src'].split("?")[0])
+
+                title_div = span_div[2].findAll('h2')
+                for title in title_div:
+                    titles.append(title.text)
+
+                date_div = span_div[2].findAll('span', {'class': 'date'})
+                for date in date_div:
+                    comments = date.findAll(text=lambda text:isinstance(text, Comment))
+                    for comment in comments:
+                        datetimes.append(comment)
+
+    datetimes_ = []
+
+    month_dict = {
+        '01 ': 'Jan ',
+        '02 ': 'Feb ',
+        '03 ': 'Mar ',
+        '04 ': 'Apr ',
+        '05 ': 'May ',
+        '06 ': 'Jun ',
+        '07 ': 'Jul ',
+        '08 ': 'Aug ',
+        '09 ': 'Sep ',
+        '10 ': 'Oct ',
+        '11 ': 'Nov ',
+        '12 ': 'Dec ',
+    }
+
+    check_dict = {
+        'Jan': 'January',
+        'Feb': 'February',
+        'Mar': 'March',
+        'Jun': 'June',
+        'Jul': 'July',
+        'Aug': 'August',
+        'Sep': 'September',
+        'Oct': 'October',
+        'Nov': 'November',
+        'Dec': 'December'
+    }
+
+    for d in datetimes:
+        d_ = datetime.datetime.strptime(d[:10], "%Y-%m-%d")
+        d_ = d_.strftime("%d %m %Y") + d[10:]
+        
+        for before, after in month_dict.items():
+            d_ = d_.replace(before, after)
+
+        d_ += ' +0700'
+
+        if d[:2].isdigit() == False:
+            d = '0' + d
+
+        d__ = ' '.join([check_dict.get(i, i) for i in d_.split()])
+        day = datetime.datetime.strptime(d__[:-15], '%d %B %Y').strftime('%a')
+        d_final = day + ", " + d_
+
+        datetimes_.append(d_final)
+
+    template = render_template('feedcnnkuliner.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
+    response = make_response(template)
+    response.headers['Content-Type'] = 'application/xml'
+
+    return response    
+
+@app.route('/feed/berdesa')
+def berdesa():
+    url = 'http://www.berdesa.com/desa-wisata/'
+    req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
+    con = urllib.request.urlopen(req)
+    soup = BeautifulSoup(con.read(), 'lxml')
+    
+    titles = []
+    links = []
+    photo_links = []
+    paragraph = []
+    datetimes = []
+
+    news_contents = soup.findAll('div', {'class': 'td_module_10 td_module_wrap td-animation-stack'})
+
+    for i in news_contents:
+        soup2 = BeautifulSoup(str(i), 'lxml')
+
+        if len(links) < 10:
+            image_div = soup2.findAll('div', {'class': 'td-module-thumb'})
+            for div in image_div:
+                a_div = div.findAll('a')
+                links.append(a_div[0]['href'])
+
+                for a in a_div:
+                    img_div = a.findAll('img')
+                    photo_links.append(img_div[0]['src'])
+
+            content_div = soup2.findAll('div', {'class': 'item-details'})
+            for content in content_div:
+                title_div = content.findAll('h3', {'class': 'entry-title td-module-title'})
+                for title in title_div:
+                    a_div = title.findAll('a')
+                    titles.append(a_div[0].text)
+
+                date_div = content.findAll('div', {'class': 'td-module-meta-info'})
+                for date in date_div:
+                    span_div = date.findAll('span', {'class': 'td-post-date'})
+                    for span in span_div:
+                        d_times = span.findAll('time', {'class': 'entry-date updated td-module-date'})
+                    datetimes.append(d_times[0].text)
+
+            par_div = soup2.findAll('div', {'class': 'td-excerpt'})
+            paragraph.append(par_div[0].text)
+
+    datetimes_ = []
+
+    month_dict = {
+        'Januari': 'Jan',
+        'Februari': 'Feb',
+        'Maret': 'Mar',
+        'April': 'Apr',
+        'Mei': 'May',
+        'Juni': 'Jun',
+        'Juli': 'Jul',
+        'Agustus': 'Aug',
+        'September': 'Sep',
+        'Oktober': 'Oct',
+        'November': 'Nov',
+        'Desember': 'Dec'
+    }
+
+    check_dict = {
+        'Jan': 'January',
+        'Feb': 'February',
+        'Mar': 'March',
+        'Apr': 'April',
+        'Jun': 'June',
+        'Jul': 'July',
+        'Aug': 'August',
+        'Sep': 'September',
+        'Oct': 'October',
+        'Nov': 'November',
+        'Dec': 'December'
+    }
+
+    for d in datetimes:
+
+
+        
+        if d[:2].isdigit() == False:
+            d = '0' + d
+
+        for before, after in month_dict.items():
+            d = d.replace(before, after)
+
+        d += ' 00:00:00 +0700'
+
+        d_ = ' '.join([check_dict.get(i, i) for i in d.split()])
+        day = datetime.datetime.strptime(d_[:-15], '%d %B %Y').strftime('%a')
+        d_final = day + ", " + d
+
+        datetimes_.append(d_final)
+
+    template = render_template('feedberdesa.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
+    response = make_response(template)
+    response.headers['Content-Type'] = 'application/xml'
+
+    return response
 
 if __name__ == '__main__':
     app.run(debug=True)
