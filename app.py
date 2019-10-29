@@ -1662,7 +1662,7 @@ def feedidntimes():
 
         datetimes_.append(d_final)
 
-    template = render_template('feedidntimes.xml', news_contents=news_contents, links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
+    template = render_template('feedidntimes.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
 
