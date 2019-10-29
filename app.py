@@ -1587,7 +1587,7 @@ def feedidntimes():
     for i in news_contents:
         soup2 = BeautifulSoup(str(i), 'lxml')
 
-        if len(links) < 10:
+        if len(links) < 8:
             a_div = soup2.findAll('a')
             links.append(a_div[0]['href'])
 
