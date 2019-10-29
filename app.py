@@ -1668,5 +1668,108 @@ def feedidntimes():
 
     return response
 
+@app.route('/feed/tribunnews')
+def tribunnews():
+    url = 'https://www.tribunnews.com/travel'
+    req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
+    con = urllib.request.urlopen(req)
+    soup = BeautifulSoup(con.read(), 'lxml')
+    
+    titles = []
+    links = []
+    photo_links = []
+    paragraph = []
+    datetimes = []
+
+    news_contents = soup.findAll('li', {'class': 'p1520 art-list pos_rel'})
+
+    for i in news_contents:
+        soup2 = BeautifulSoup(str(i), 'lxml')
+
+        if len(links) < 11:
+            divs = soup2.findAll('div')
+
+            a_div = divs[0].findAll('a')
+            links.append(a_div[0]['href'])
+            for a in a_div:
+                img_div = a.findAll('img')
+                photo_links.append(img_div[0]['src'])
+
+            title_div = divs[1].findAll('h3')
+            for div in title_div:
+                a_div = div.findAll('a')
+                titles.append(a_div[0].text)
+
+            par_div = divs[1].findAll('div', {'class': 'grey2 pt5 f13 ln18 txt-oev-3'})
+            paragraph.append(par_div[0].text)
+
+            time_div = divs[1].findAll('div', {'class': 'grey pt5'})
+            for div in time_div:
+                d_times = div.findAll('time', {'class': 'foot timeago'})
+                datetimes.append(d_times[0]['title'])
+
+    datetimes_ = []
+
+    day_dict = {
+        'Senin': 'Mon',
+        'Selasa': 'Tue',
+        'Rabu': 'Wed',
+        'Kamis': 'Thu',
+        "Jum'at": 'Fri',
+        'Sabtu': 'Sat',
+        'Minggu': 'Sun'
+    }
+
+    month_dict = {
+        '01 ': 'Jan ',
+        '02 ': 'Feb ',
+        '03 ': 'Mar ',
+        '04 ': 'Apr ',
+        '05 ': 'May ',
+        '06 ': 'Jun ',
+        '07 ': 'Jul ',
+        '08 ': 'Aug ',
+        '09 ': 'Sep ',
+        '10 ': 'Oct ',
+        '11 ': 'Nov ',
+        '12 ': 'Dec ',
+    }
+
+    check_dict = {
+        'Jan': 'January',
+        'Feb': 'February',
+        'Mar': 'March',
+        'Jun': 'June',
+        'Jul': 'July',
+        'Aug': 'August',
+        'Sep': 'September',
+        'Oct': 'October',
+        'Nov': 'November',
+        'Dec': 'December'
+    }
+
+    for d in datetimes:
+        d_ = datetime.datetime.strptime(d[:10], "%Y-%m-%d")
+        d_ = d_.strftime("%d %m %Y") + d[10:]
+        
+        for before, after in month_dict.items():
+            d_ = d_.replace(before, after)
+
+        d_ += ' +0700'
+
+        d_ = ' '.join([check_dict.get(i, i) for i in d_.split()])
+        day = datetime.datetime.strptime(d_[:-15], '%d %B %Y').strftime('%a')
+        d_final = day + ", " + d_
+
+        datetimes_.append(d_final)
+
+    template = render_template('feedtribunnews.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
+    response = make_response(template)
+    response.headers['Content-Type'] = 'application/xml'
+
+    return response
+
+# @app.route('/feed/')
+
 if __name__ == '__main__':
     app.run(debug=True)
