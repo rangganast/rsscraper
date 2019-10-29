@@ -1757,8 +1757,8 @@ def tribunnews():
 
         d_ += ' +0700'
 
-        d_ = ' '.join([check_dict.get(i, i) for i in d_.split()])
-        day = datetime.datetime.strptime(d_[:-15], '%d %B %Y').strftime('%a')
+        d__ = ' '.join([check_dict.get(i, i) for i in d_.split()])
+        day = datetime.datetime.strptime(d__[:-15], '%d %B %Y').strftime('%a')
         d_final = day + ", " + d_
 
         datetimes_.append(d_final)
