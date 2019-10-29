@@ -1146,7 +1146,7 @@ def feedokezone():
         
         li_div = soup2.findAll('li')
         for li in li_div:
-            if len(links) < 5:
+            if len(links) < 8:
                 divs = li.findAll('div', {'class': 'wp-thumb-news'})
                 for div in divs:
                     a_div = div.findAll('a', {'class': 'gabreaking'})
@@ -1587,7 +1587,7 @@ def feedidntimes():
     for i in news_contents:
         soup2 = BeautifulSoup(str(i), 'lxml')
 
-        if len(links) < 5:
+        if len(links) < 8:
             a_div = soup2.findAll('a')
             links.append(a_div[0]['href'])
 
@@ -1606,14 +1606,14 @@ def feedidntimes():
                 for title in title_div:
                     titles.append(title.text)
 
-    for link in links:                    
-        req = urllib.request.Request(link, headers={'User-Agent': "Magic Browser"})
-        con = urllib.request.urlopen(req)
-        soup3 = BeautifulSoup(con.read(), 'lxml')
+    # for link in links:                    
+    #     req = urllib.request.Request(link, headers={'User-Agent': "Magic Browser"})
+    #     con = urllib.request.urlopen(req)
+    #     soup3 = BeautifulSoup(con.read(), 'lxml')
 
-        par_div = soup3.findAll('div', {'class': 'excerpt'})
-        for par in par_div:
-            paragraph.append(par.text)
+    #     par_div = soup3.findAll('div', {'class': 'excerpt'})
+    #     for par in par_div:
+    #         paragraph.append(par.text)
 
     datetimes_ = []
 
