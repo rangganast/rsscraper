@@ -1461,7 +1461,7 @@ def feedpikiranrakyat():
         'Selasa': 'Tue',
         'Rabu': 'Wed',
         'Kamis': 'Thu',
-        "Jum'at": 'Fri',
+        "Jumat": 'Fri',
         'Sabtu': 'Sat',
         'Minggu': 'Sun'
     }
