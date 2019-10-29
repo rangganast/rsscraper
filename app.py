@@ -1893,28 +1893,27 @@ def cnnwisata():
         contents = i.findAll('article')
 
         for content in contents:
-            if len(links) < 10:
-                soup2 = BeautifulSoup(str(content), 'lxml')
+            soup2 = BeautifulSoup(str(content), 'lxml')
 
-                a_div = soup2.findAll('a')
-                links.append(a_div[0]['href'])
-                
-                span_div = a_div[0].findAll('span')
+            a_div = soup2.findAll('a')
+            links.append(a_div[0]['href'])
+            
+            span_div = a_div[0].findAll('span')
 
-                span_img = span_div[0].findAll('span')
-                img_div = span_img[0].findAll('img')
+            span_img = span_div[0].findAll('span')
+            img_div = span_img[0].findAll('img')
 
-                photo_links.append(img_div[0]['src'].split("?")[0])
+            photo_links.append(img_div[0]['src'].split("?")[0])
 
-                title_div = span_div[2].findAll('h2')
-                for title in title_div:
-                    titles.append(title.text)
+            title_div = span_div[2].findAll('h2')
+            for title in title_div:
+                titles.append(title.text)
 
-                date_div = span_div[2].findAll('span', {'class': 'date'})
-                for date in date_div:
-                    comments = date.findAll(text=lambda text:isinstance(text, Comment))
-                    for comment in comments:
-                        datetimes.append(comment)
+            date_div = span_div[2].findAll('span', {'class': 'date'})
+            for date in date_div:
+                comments = date.findAll(text=lambda text:isinstance(text, Comment))
+                for comment in comments:
+                    datetimes.append(comment)
 
     datetimes_ = []
 
