@@ -1599,25 +1599,24 @@ def feedidntimes():
     for i in news_contents:
         soup2 = BeautifulSoup(str(i), 'lxml')
 
-        if l
+        if len(links) < 11:
+            a_div = soup2.findAll('a')
+            links.append(a_div[0]['href'])
 
-        a_div = soup2.findAll('a')
-        links.append(a_div[0]['href'])
+            for div in a_div:
+                image_div = div.findAll('div', {'class': 'image-latest box-image'})
+                for img in image_div:
+                    image = img.findAll('img')
+                    photo_links.append(image[0]['data-src'])
 
-        for div in a_div:
-            image_div = div.findAll('div', {'class': 'image-latest box-image'})
-            for img in image_div:
-                image = img.findAll('img')
-                photo_links.append(image[0]['data-src'])
+            content_div = soup2.findAll('div', {'class': 'description-latest box-description'})
+            for div in content_div:
+                d_times = div.findAll('time', {'class': 'date'})
+                datetimes.append(d_times[0].text)
 
-        content_div = soup2.findAll('div', {'class': 'description-latest box-description'})
-        for div in content_div:
-            d_times = div.findAll('time', {'class': 'date'})
-            datetimes.append(d_times[0].text)
-
-            title_div = div.findAll('h2', {'class': 'title-text'})
-            for title in title_div:
-                titles.append(title.text)
+                title_div = div.findAll('h2', {'class': 'title-text'})
+                for title in title_div:
+                    titles.append(title.text)
     
 
     template = render_template('feedidntimes.xml', news_contents=news_contents, links=links, titles=titles, photo_links=photo_links, datetimes=datetimes, paragraph=paragraph)
