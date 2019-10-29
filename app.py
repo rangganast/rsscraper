@@ -1497,7 +1497,7 @@ def feedpikiranrakyat():
 
 @app.route('/feed/kemenpar')
 def feedkemenpar():
-    url = 'https://www.idntimes.com/travel'
+    url = 'http://www.kemenpar.go.id/categories/berita-utama'
     req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
     con = urllib.request.urlopen(req)
     soup = BeautifulSoup(con.read(), 'lxml')
