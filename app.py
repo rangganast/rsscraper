@@ -1280,7 +1280,7 @@ def feedberitasatuwisata():
         'Selasa': 'Tue',
         'Rabu': 'Wed',
         'Kamis': 'Thu',
-        "Jum'at": 'Fri',
+        "Jumat": 'Fri',
         'Sabtu': 'Sat',
         'Minggu': 'Sun'
     }
@@ -1372,7 +1372,7 @@ def feedberitasatukuliner():
         'Selasa': 'Tue',
         'Rabu': 'Wed',
         'Kamis': 'Thu',
-        "Jum'at": 'Fri',
+        "Jumat": 'Fri',
         'Sabtu': 'Sat',
         'Minggu': 'Sun'
     }
