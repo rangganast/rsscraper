@@ -1142,26 +1142,26 @@ def feedokezone():
     news_contents = soup.findAll('div', {'class': 'list-contentx'})
     
     for i in news_contents:
-            soup2 = BeautifulSoup(str(i), 'lxml')
-            
-            li_div = soup2.findAll('li')
-            for li in li_div:
-                if len(links) < 10:
-                    divs = li.findAll('div', {'class': 'wp-thumb-news'})
-                    for div in divs:
-                        a_div = div.findAll('a', {'class': 'gabreaking'})
-                        for a in a_div:
-                            links.append(a['href'].split("?")[0])
-                            titles.append(a['title'])
+        soup2 = BeautifulSoup(str(i), 'lxml')
+        
+        li_div = soup2.findAll('li')
+        for li in li_div:
+            if len(links) < 10:
+                divs = li.findAll('div', {'class': 'wp-thumb-news'})
+                for div in divs:
+                    a_div = div.findAll('a', {'class': 'gabreaking'})
+                    for a in a_div:
+                        links.append(a['href'].split("?")[0])
+                        titles.append(a['title'])
 
-                        img_div = div.findAll('div', {'class': 'thumb-news img-responsive lazy'})
-                        photo_links.append(img_div[0]['data-original'])
+                    img_div = div.findAll('div', {'class': 'thumb-news img-responsive lazy'})
+                    photo_links.append(img_div[0]['data-original'])
 
-                    content_div = li.findAll('div', {'class': 'content-hardnews'})
-                    for div in content_div:
-                        par_div = div.findAll('p')
-                        for par in par_div:
-                            paragraph.append(par.text)
+                content_div = li.findAll('div', {'class': 'content-hardnews'})
+                for div in content_div:
+                    par_div = div.findAll('p')
+                    for par in par_div:
+                        paragraph.append(par.text)
 
     for link in links:
         req = urllib.request.Request(link, headers={'User-Agent': "Magic Browser"})
