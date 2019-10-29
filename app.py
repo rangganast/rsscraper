@@ -1214,7 +1214,7 @@ def feedokezone():
 
         datetimes_.append(d)
 
-    template = render_template('feedokezone.xml', news_contents=news_contents, links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
+    template = render_template('feedokezone.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
 
