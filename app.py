@@ -1972,7 +1972,7 @@ def cnnwisata():
 
 @app.route('/feed/cnnkuliner')
 def cnnkuliner():
-    url = 'https://www.cnnindonesia.com/gaya-hidup/wisata'
+    url = 'https://www.cnnindonesia.com/gaya-hidup/kuliner'
     req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
     con = urllib.request.urlopen(req)
     soup = BeautifulSoup(con.read(), 'lxml')
