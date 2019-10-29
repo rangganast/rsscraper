@@ -1067,7 +1067,7 @@ def feedkontan():
             for a in a_div:
                 img_div = a.findAll('img')
                 for img in img_div:
-                    photo_links.append(img['src'])
+                    photo_links.append('https:' + img['src'])
                     titles.append(img['title'])
 
             span_div = li.findAll('span', {'class': 'font-gray'})
@@ -1081,7 +1081,7 @@ def feedkontan():
         'Selasa': 'Tue',
         'Rabu': 'Wed',
         'Kamis': 'Thu',
-        "Jum'at": 'Fri',
+        "Jumat": 'Fri',
         'Sabtu': 'Sat',
         'Minggu': 'Sun'
     }
