@@ -1146,7 +1146,7 @@ def feedokezone():
         
         li_div = soup2.findAll('li')
         for li in li_div:
-            if len(links) < 10:
+            if len(links) < 5:
                 divs = li.findAll('div', {'class': 'wp-thumb-news'})
                 for div in divs:
                     a_div = div.findAll('a', {'class': 'gabreaking'})
@@ -1587,7 +1587,7 @@ def feedidntimes():
     for i in news_contents:
         soup2 = BeautifulSoup(str(i), 'lxml')
 
-        if len(links) < 8:
+        if len(links) < 5:
             a_div = soup2.findAll('a')
             links.append(a_div[0]['href'])
 
