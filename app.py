@@ -967,7 +967,7 @@ def feedbisnistravel():
 
         img_div = a_div[0].findAll('img')
         for img in img_div:
-            photo_links.append(img['src'].split("?")[0])
+            photo_links.append(img['src'])
 
         titles.append(a_div[1].text)
 
