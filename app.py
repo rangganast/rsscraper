@@ -32,21 +32,22 @@ def feedkompas():
     news_contents = soup.findAll('div', {'class': 'article__asset'})
     
     for article in news_contents:
-        # Get Links
-        link_div = article.findAll('a')
-        for i in link_div:
-            link = i['href']
-            links.append(link)
-            
-            # Get image and title
-            img_div = i.findAll('img')
-            for img in img_div:
-                photo_links.append(img['src'])
-                titles.append(img['alt'])
+        if len(links) < 10:
+            # Get Links
+            link_div = article.findAll('a')
+            for i in link_div:
+                link = i['href']
+                links.append(link)
+                
+                # Get image and title
+                img_div = i.findAll('img')
+                for img in img_div:
+                    photo_links.append(img['src'])
+                    titles.append(img['alt'])
 
-    time_div = soup.findAll('div', {'class': 'article__date'})
-    for i in time_div:
-        datetimes.append(i.text)
+            time_div = soup.findAll('div', {'class': 'article__date'})
+            for i in time_div:
+                datetimes.append(i.text)
             
     for i in links:
         req = urllib.request.Request(i, headers={'User-Agent': "Magic Browser"})
@@ -246,16 +247,6 @@ def feedtempo():
 
     datetimes_ = []
 
-    day_dict = {
-        'Senin': 'Mon',
-        'Selasa': 'Tue',
-        'Rabu': 'Wed',
-        'Kamis': 'Thu',
-        "Jum'at": 'Fri',
-        'Sabtu': 'Sat',
-        'Minggu': 'Sun'
-    }
-
     month_dict = {
         'Januari': 'Jan',
         'Februari': 'Feb',
@@ -285,9 +276,6 @@ def feedtempo():
     }
 
     for d in datetimes:
-        for before, after in day_dict.items():
-            d = d.replace(before, after)
-
         if d[:2].isdigit() == False:
             d = d.replace(d[5], '0' + d[5])
 
@@ -334,9 +322,9 @@ def feedkumparan():
                 link = t.find('a')['href']
                 links.append(link)
 
-        image_div = soup2.findAll('img', {'class': 'no-script'})
-        for i in image_div:
-            photo_links.append(i['src'])
+            image_div = soup2.findAll('img', {'class': 'no-script'})
+            for i in image_div:
+                photo_links.append(i['src'])
 
     links_ = []
     for link in links:
@@ -1599,7 +1587,7 @@ def feedidntimes():
     for i in news_contents:
         soup2 = BeautifulSoup(str(i), 'lxml')
 
-        if len(links) < 11:
+        if len(links) < 10:
             a_div = soup2.findAll('a')
             links.append(a_div[0]['href'])
 
@@ -1617,9 +1605,64 @@ def feedidntimes():
                 title_div = div.findAll('h2', {'class': 'title-text'})
                 for title in title_div:
                     titles.append(title.text)
-    
 
-    template = render_template('feedidntimes.xml', news_contents=news_contents, links=links, titles=titles, photo_links=photo_links, datetimes=datetimes, paragraph=paragraph)
+    for link in links:                    
+        req = urllib.request.Request(link, headers={'User-Agent': "Magic Browser"})
+        con = urllib.request.urlopen(req)
+        soup3 = BeautifulSoup(con.read(), 'lxml')
+
+        par_div = soup3.findAll('div', {'class': 'excerpt'})
+        for par in par_div:
+            paragraph.append(par.text)
+
+    datetimes_ = []
+
+    month_dict = {
+        'Januari': 'Jan',
+        'Februari': 'Feb',
+        'Maret': 'Mar',
+        'April': 'Apr',
+        'Mei': 'May',
+        'Juni': 'Jun',
+        'Juli': 'Jul',
+        'Agustus': 'Aug',
+        'September': 'Sep',
+        'Oktober': 'Oct',
+        'November': 'Nov',
+        'Desember': 'Dec'
+    }
+
+    check_dict = {
+        'Jan': 'January',
+        'Feb': 'February',
+        'Mar': 'March',
+        'Jun': 'June',
+        'Jul': 'July',
+        'Aug': 'August',
+        'Sep': 'September',
+        'Oct': 'October',
+        'Nov': 'November',
+        'Dec': 'December'
+    }
+
+    for d in datetimes:
+        d = d[25:-21]
+
+        if d[:2].isdigit() == False:
+            d = '0' + d
+
+        for before, after in month_dict.items():
+            d = d.replace(before, after)
+
+        d += '00:00:00 +0700'
+
+        d_ = ' '.join([check_dict.get(i, i) for i in d.split()])
+        day = datetime.datetime.strptime(d_[:-15], '%d %B %Y').strftime('%a')
+        d_final = day + ", " + d
+
+        datetimes_.append(d_final)
+
+    template = render_template('feedidntimes.xml', news_contents=news_contents, links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
 
