@@ -1163,46 +1163,46 @@ def feedokezone():
                     for par in par_div:
                         paragraph.append(par.text)
 
-    for link in links:
-        req = urllib.request.Request(link, headers={'User-Agent': "Magic Browser"})
-        con = urllib.request.urlopen(req)
-        soup3 = BeautifulSoup(con.read(), 'lxml')
+    # for link in links:
+    #     req = urllib.request.Request(link, headers={'User-Agent': "Magic Browser"})
+    #     con = urllib.request.urlopen(req)
+    #     soup3 = BeautifulSoup(con.read(), 'lxml')
 
-        d_times = soup3.findAll('div', {'class': 'namerep'})
-        for d in d_times:
-            datetimes.append(d.find('b').text)
+    #     d_times = soup3.findAll('div', {'class': 'namerep'})
+    #     for d in d_times:
+    #         datetimes.append(d.find('b').text)
 
-    datetimes_ = []
+    # datetimes_ = []
 
-    month_dict = {
-        'Januari': 'Jan',
-        'Februari': 'Feb',
-        'Maret': 'Mar',
-        'April': 'Apr',
-        'Mei': 'May',
-        'Juni': 'Jun',
-        'Juli': 'Jul',
-        'Agustus': 'Aug',
-        'September': 'Sep',
-        'Oktober': 'Oct',
-        'November': 'Nov',
-        'Desember': 'Dec'
-    }
+    # month_dict = {
+    #     'Januari': 'Jan',
+    #     'Februari': 'Feb',
+    #     'Maret': 'Mar',
+    #     'April': 'Apr',
+    #     'Mei': 'May',
+    #     'Juni': 'Jun',
+    #     'Juli': 'Jul',
+    #     'Agustus': 'Aug',
+    #     'September': 'Sep',
+    #     'Oktober': 'Oct',
+    #     'November': 'Nov',
+    #     'Desember': 'Dec'
+    # }
 
-    for d in datetimes:
+    # for d in datetimes:
 
-        for before, after in day_dict.items():
-            d = d.replace(before, after)
+    #     for before, after in day_dict.items():
+    #         d = d.replace(before, after)
         
-        if d[5:7].isdigit() == False:
-            d = d.replace(d[5], '0' + d[5])
+    #     if d[5:7].isdigit() == False:
+    #         d = d.replace(d[5], '0' + d[5])
 
-        for before, after in month_dict.items():
-            d = d.replace(before, after)
+    #     for before, after in month_dict.items():
+    #         d = d.replace(before, after)
 
-        d = d.replace(' WIB', ':00 +0700')
+    #     d = d.replace(' WIB', ':00 +0700')
 
-        datetimes_.append(d)
+    #     datetimes_.append(d)
 
     template = render_template('feedokezone.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
     response = make_response(template)
