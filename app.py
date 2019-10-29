@@ -971,71 +971,71 @@ def feedbisnistravel():
 
         titles.append(a_div[1].text)
 
-    for link in links:
-        req = urllib.request.Request(link, headers={'User-Agent': "Magic Browser"})
-        con = urllib.request.urlopen(req)
-        soup3 = BeautifulSoup(con.read(), 'lxml')
+    # for link in links:
+    #     req = urllib.request.Request(link, headers={'User-Agent': "Magic Browser"})
+    #     con = urllib.request.urlopen(req)
+    #     soup3 = BeautifulSoup(con.read(), 'lxml')
 
-        d_times = soup3.findAll('div', {'class': 'new-description'})
-        for d in d_times:
-            span_div = d.findAll('span')
-            for span in span_div:
-                datetimes.append(span.text)
+    #     d_times = soup3.findAll('div', {'class': 'new-description'})
+    #     for d in d_times:
+    #         span_div = d.findAll('span')
+    #         for span in span_div:
+    #             datetimes.append(span.text)
 
-        par_div = soup3.findAll('div', {'class': 'subtitle'})
-        for par in par_div:
-            paragraph.append(par.text)
+    #     par_div = soup3.findAll('div', {'class': 'subtitle'})
+    #     for par in par_div:
+    #         paragraph.append(par.text)
 
-    datetimes_ = []
+    # datetimes_ = []
 
-    month_dict = {
-        'Januari': 'Jan',
-        'Februari': 'Feb',
-        'Maret': 'Mar',
-        'April': 'Apr',
-        'Mei': 'May',
-        'Juni': 'Jun',
-        'Juli': 'Jul',
-        'Agustus': 'Aug',
-        'September': 'Sep',
-        'Oktober': 'Oct',
-        'November': 'Nov',
-        'Desember': 'Dec'
-    }
+    # month_dict = {
+    #     'Januari': 'Jan',
+    #     'Februari': 'Feb',
+    #     'Maret': 'Mar',
+    #     'April': 'Apr',
+    #     'Mei': 'May',
+    #     'Juni': 'Jun',
+    #     'Juli': 'Jul',
+    #     'Agustus': 'Aug',
+    #     'September': 'Sep',
+    #     'Oktober': 'Oct',
+    #     'November': 'Nov',
+    #     'Desember': 'Dec'
+    # }
 
-    check_dict = {
-        'Jan': 'January',
-        'Feb': 'February',
-        'Mar': 'March',
-        'Jun': 'June',
-        'Jul': 'July',
-        'Aug': 'August',
-        'Sep': 'September',
-        'Oct': 'October',
-        'Nov': 'November',
-        'Dec': 'December'
-    }
+    # check_dict = {
+    #     'Jan': 'January',
+    #     'Feb': 'February',
+    #     'Mar': 'March',
+    #     'Jun': 'June',
+    #     'Jul': 'July',
+    #     'Aug': 'August',
+    #     'Sep': 'September',
+    #     'Oct': 'October',
+    #     'Nov': 'November',
+    #     'Dec': 'December'
+    # }
 
-    for d in datetimes:
+    # for d in datetimes:
 
-        d = d[1:-1]
+    #     d = d[1:-1]
 
-        if d[:2].isdigit() == False:
-            d = '0' + d
+    #     if d[:2].isdigit() == False:
+    #         d = '0' + d
 
-        for before, after in month_dict.items():
-            d = d.replace(before, after)
+    #     for before, after in month_dict.items():
+    #         d = d.replace(before, after)
 
-        d = d.replace(u'\xa0' + '|' + u'\xa0' + ' ', '')
-        d = d.replace(' WIB', ':00 +0700')
-        d_ = ' '.join([check_dict.get(i, i) for i in d.split()])
-        day = datetime.datetime.strptime(d_[:-15], '%d %B %Y').strftime('%a')
+    #     d = d.replace(u'\xa0' + '|' + u'\xa0' + ' ', '')
+    #     d = d.replace(' WIB', ':00 +0700')
+    #     d_ = ' '.join([check_dict.get(i, i) for i in d.split()])
+    #     day = datetime.datetime.strptime(d_[:-15], '%d %B %Y').strftime('%a')
 
-        d = day + ', ' + d
+    #     d = day + ', ' + d
 
-        datetimes_.append(d)
+    #     datetimes_.append(d)
 
-    template = render_template('feedbisnistravel.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
+    template = render_template('feedbisnistravel.xml', links=links, titles=titles, photo_links=photo_links)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
 
