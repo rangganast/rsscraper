@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>Travel-Feed Holahalo Beta</title>
+        <title>Travel-Feed - Berdesa</title>
         <link>https://travel-feed-coba.herokuapp.com</link>
         <description>Travel-Feed Holahalo Beta</description>
         <image>
-            <title>Travel-Feed Holahalo Beta</title>
+            <title>Travel-Feed - Berdesa</title>
             <link>https://travel-feed-coba.herokuapp.com</link>
             <url>https://www.collaboration133.com/wp-content/uploads/2011/06/rss.gif</url>
         </image>

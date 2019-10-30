@@ -2179,7 +2179,7 @@ def feedberdesa():
     return response
 
 @app.route('/feed/youtube/fahmicatperku')
-def feedfahmicatperku():
+def feedyoutubefahmicatperku():
     url = 'https://www.youtube.com/user/catperku/videos'
     req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
     con = urllib.request.urlopen(req)
@@ -2237,7 +2237,7 @@ def feedfahmicatperku():
     return response
 
 @app.route('/feed/youtube/wiranur')
-def feedwiranur():
+def feedyoutubewiranur():
     url = 'https://www.youtube.com/user/wiranur/videos'
     req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
     con = urllib.request.urlopen(req)
