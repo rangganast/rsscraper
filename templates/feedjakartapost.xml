@@ -22,6 +22,6 @@
             </description>
         </item>
         {% endfor %}
-        <atom:link href="https://travel-feed-coba.herokuapp.com/feed/jakartapost" rel="self" type="application/rss+xml" />
+        <atom:link href="http://travel-feed-coba.herokuapp.com/feed/jakartapost" rel="self" type="application/rss+xml" />
     </channel>
 </rss>
