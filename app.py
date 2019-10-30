@@ -2230,7 +2230,65 @@ def feedfahmicatperku():
             p_div = news.findAll('p', {'id': 'eow-description'})
             paragraph.append(p_div[0].text)
 
-    template = render_template('feedfahmicatperku.xml', links=links, titles=titles, photo_links=photo_links, paragraph=paragraph)
+    template = render_template('feedyoutubefahmicatperku.xml', links=links, titles=titles, photo_links=photo_links, paragraph=paragraph)
+    response = make_response(template)
+    response.headers['Content-Type'] = 'application/xml'
+
+    return response
+
+@app.route('/feed/youtube/wiranur')
+def feedwiranur():
+    url = 'https://www.youtube.com/user/wiranur/videos'
+    req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
+    con = urllib.request.urlopen(req)
+    soup = BeautifulSoup(con.read(), 'lxml')
+    
+    titles = []
+    links = []
+    photo_links = []
+    paragraph = []
+    datetimes = []
+
+    news_contents = soup.find_all('li', {'class': 'channels-content-item yt-shelf-grid-item'})
+    for i in news_contents:
+        soup2 = BeautifulSoup(str(i), 'lxml')
+
+        divs = soup2.findAll('div', {'class': 'yt-lockup clearfix yt-lockup-video yt-lockup-grid vve-check'})
+        for div in divs:
+            if len(links) < 10:
+                link_div = div.findAll('div', {'class': 'yt-lockup-thumbnail'})
+                for link in link_div:
+                    link_span = link.findAll('span', {'class': 'spf-link ux-thumb-wrap contains-addto'})
+                    for span in link_span:
+                        a_div = link.findAll('a')
+                        links.append('https://youtube.com' + str(a_div[0]['href']))
+
+                        for a in a_div:
+                            img_span = a.findAll('span', {'class': 'yt-thumb-default'})
+                            for img in img_span:
+                                img_span2 = img.findAll('span', {'class': 'yt-thumb-clip'})
+                                for span2 in img_span2:
+                                    img_div = span2.findAll('img')
+                                    photo_links.append(img_div[0]['src'])
+
+                content_div = div.findAll('div', {'class': 'yt-lockup-content'})
+                for content in content_div:
+                    title_div = content.findAll('h3', {'class': 'yt-lockup-title'})
+                    for title in title_div:
+                        a_div = title.findAll('a')
+                        titles.append(a_div[0].text)
+
+    for link in links:
+        req = urllib.request.Request(link, headers={'User-Agent': "Magic Browser"})
+        con = urllib.request.urlopen(req)
+        soup3 = BeautifulSoup(con.read(), 'lxml')
+
+        news_contents = soup3.findAll('div', {'id': 'watch-description-text'})
+        for news in news_contents:
+            p_div = news.findAll('p', {'id': 'eow-description'})
+            paragraph.append(p_div[0].text)
+
+    template = render_template('feedyoutubewiranur.xml', links=links, titles=titles, photo_links=photo_links, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
 
