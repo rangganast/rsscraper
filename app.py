@@ -1659,7 +1659,7 @@ def feedidntimes():
     return response
 
 @app.route('/feed/tribunnews')
-def tribunnews():
+def feedtribunnews():
     url = 'https://www.tribunnews.com/travel'
     req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
     con = urllib.request.urlopen(req)
@@ -1763,7 +1763,7 @@ def tribunnews():
     return response
 
 @app.route('/feed/jakartapost')
-def jakartapost():
+def feedjakartapost():
     url = 'https://www.thejakartapost.com/travel'
     req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
     con = urllib.request.urlopen(req)
@@ -1873,7 +1873,7 @@ def jakartapost():
     return response
 
 @app.route('/feed/cnnwisata')
-def cnnwisata():
+def feedcnnwisata():
     url = 'https://www.cnnindonesia.com/gaya-hidup/wisata'
     req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
     con = urllib.request.urlopen(req)
@@ -1882,7 +1882,6 @@ def cnnwisata():
     titles = []
     links = []
     photo_links = []
-    paragraph = []
     datetimes = []
 
     for a in soup.find_all('article', {'class': 'ads_native_d'}):
@@ -1970,14 +1969,14 @@ def cnnwisata():
 
         datetimes_.append(d_final)
 
-    template = render_template('feedcnnwisata.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
+    template = render_template('feedcnnwisata.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
 
     return response
 
 @app.route('/feed/cnnkuliner')
-def cnnkuliner():
+def feedcnnkuliner():
     url = 'https://www.cnnindonesia.com/gaya-hidup/kuliner'
     req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
     con = urllib.request.urlopen(req)
@@ -1986,7 +1985,6 @@ def cnnkuliner():
     titles = []
     links = []
     photo_links = []
-    paragraph = []
     datetimes = []
 
     for a in soup.find_all('article', {'class': 'ads_native_d'}):
@@ -2074,14 +2072,14 @@ def cnnkuliner():
 
         datetimes_.append(d_final)
 
-    template = render_template('feedcnnkuliner.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
+    template = render_template('feedcnnkuliner.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
 
     return response    
 
 @app.route('/feed/berdesa')
-def berdesa():
+def feedberdesa():
     url = 'http://www.berdesa.com/desa-wisata/'
     req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
     con = urllib.request.urlopen(req)
@@ -2175,6 +2173,64 @@ def berdesa():
         datetimes_.append(d_final)
 
     template = render_template('feedberdesa.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
+    response = make_response(template)
+    response.headers['Content-Type'] = 'application/xml'
+
+    return response
+
+@app.route('/feed/youtube/fahmicatperku')
+def feedfahmicatperku():
+    url = 'https://www.youtube.com/user/catperku/videos'
+    req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
+    con = urllib.request.urlopen(req)
+    soup = BeautifulSoup(con.read(), 'lxml')
+    
+    titles = []
+    links = []
+    photo_links = []
+    paragraph = []
+    datetimes = []
+
+    news_contents = soup.find_all('li', {'class': 'channels-content-item yt-shelf-grid-item'})
+    for i in news_contents:
+        soup2 = BeautifulSoup(str(i), 'lxml')
+
+        divs = soup2.findAll('div', {'class': 'yt-lockup clearfix yt-lockup-video yt-lockup-grid vve-check'})
+        for div in divs:
+            if len(links) < 10:
+                link_div = div.findAll('div', {'class': 'yt-lockup-thumbnail'})
+                for link in link_div:
+                    link_span = link.findAll('span', {'class': 'spf-link ux-thumb-wrap contains-addto'})
+                    for span in link_span:
+                        a_div = link.findAll('a')
+                        links.append('https://youtube.com' + str(a_div[0]['href']))
+
+                        for a in a_div:
+                            img_span = a.findAll('span', {'class': 'yt-thumb-default'})
+                            for img in img_span:
+                                img_span2 = img.findAll('span', {'class': 'yt-thumb-clip'})
+                                for span2 in img_span2:
+                                    img_div = span2.findAll('img')
+                                    photo_links.append(img_div[0]['src'])
+
+                content_div = div.findAll('div', {'class': 'yt-lockup-content'})
+                for content in content_div:
+                    title_div = content.findAll('h3', {'class': 'yt-lockup-title'})
+                    for title in title_div:
+                        a_div = title.findAll('a')
+                        titles.append(a_div[0].text)
+
+    for link in links:
+        req = urllib.request.Request(link, headers={'User-Agent': "Magic Browser"})
+        con = urllib.request.urlopen(req)
+        soup3 = BeautifulSoup(con.read(), 'lxml')
+
+        news_contents = soup.findAll('div', {'id': 'watch-description-text'})
+        for news in news_contents:
+            p_div = news.findAll('p', {'id': 'eow-description'})
+            paragraph.append(p_div[0].text)
+
+    template = render_template('feedfahmicatperku.xml', links=links, titles=titles, photo_links=photo_links, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
 
