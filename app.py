@@ -1799,45 +1799,45 @@ def jakartapost():
             par_div = div.findAll('p')
             paragraph.append(par_div[0].text)
 
-    for link in links:
-        req = urllib.request.Request(link, headers={'User-Agent': "Magic Browser"})
-        con = urllib.request.urlopen(req)
-        soup3 = BeautifulSoup(con.read(), 'lxml')
+    # for link in links:
+    #     req = urllib.request.Request(link, headers={'User-Agent': "Magic Browser"})
+    #     con = urllib.request.urlopen(req)
+    #     soup3 = BeautifulSoup(con.read(), 'lxml')
 
-        date_div = soup3.findAll('div', {'class': 'descrip'})
-        for date in date_div:
-            span_div = date.findAll('span')
-            datetimes.append(span_div[1].text + span_div[2].text)
+    #     date_div = soup3.findAll('div', {'class': 'descrip'})
+    #     for date in date_div:
+    #         span_div = date.findAll('span')
+    #         datetimes.append(span_div[1].text + span_div[2].text)
     
-    datetimes_ = []
+    # datetimes_ = []
 
-    month_dict = {
-        '01 ': 'Jan ',
-        '02 ': 'Feb ',
-        '03 ': 'Mar ',
-        '04 ': 'Apr ',
-        '05 ': 'May ',
-        '06 ': 'Jun ',
-        '07 ': 'Jul ',
-        '08 ': 'Aug ',
-        '09 ': 'Sep ',
-        '10 ': 'Oct ',
-        '11 ': 'Nov ',
-        '12 ': 'Dec ',
-    }
+    # month_dict = {
+    #     '01 ': 'Jan ',
+    #     '02 ': 'Feb ',
+    #     '03 ': 'Mar ',
+    #     '04 ': 'Apr ',
+    #     '05 ': 'May ',
+    #     '06 ': 'Jun ',
+    #     '07 ': 'Jul ',
+    #     '08 ': 'Aug ',
+    #     '09 ': 'Sep ',
+    #     '10 ': 'Oct ',
+    #     '11 ': 'Nov ',
+    #     '12 ': 'Dec ',
+    # }
 
-    check_dict = {
-        'Jan': 'January',
-        'Feb': 'February',
-        'Mar': 'March',
-        'Jun': 'June',
-        'Jul': 'July',
-        'Aug': 'August',
-        'Sep': 'September',
-        'Oct': 'October',
-        'Nov': 'November',
-        'Dec': 'December'
-    }
+    # check_dict = {
+    #     'Jan': 'January',
+    #     'Feb': 'February',
+    #     'Mar': 'March',
+    #     'Jun': 'June',
+    #     'Jul': 'July',
+    #     'Aug': 'August',
+    #     'Sep': 'September',
+    #     'Oct': 'October',
+    #     'Nov': 'November',
+    #     'Dec': 'December'
+    # }
 
     # for d in datetimes:
     #     d = d.replace(u'\xa0' + '/' + u'\xa0' + ' ', '')
@@ -1866,7 +1866,7 @@ def jakartapost():
 
     #     datetimes_.append(d)
     
-    template = render_template('feedjakartapost.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes, paragraph=paragraph)
+    template = render_template('feedjakartapost.xml', links=links, titles=titles, photo_links=photo_links, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
 
