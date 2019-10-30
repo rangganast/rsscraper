@@ -2000,24 +2000,27 @@ def cnnkuliner():
         contents = i.findAll('article')
 
         for content in contents:
-            if len(links) < 10:
-                soup2 = BeautifulSoup(str(content), 'lxml')
+            soup2 = BeautifulSoup(str(content), 'lxml')
 
-                a_div = soup2.findAll('a')
-                links.append(a_div[0]['href'])
-                
-                span_div = a_div[0].findAll('span')
+            a_div = soup2.findAll('a')
+            links.append(a_div[0]['href'])
+            
+            span_div = a_div[0].findAll('span', {'class': 'ratiobox ratio_16_9 box_img'})
 
-                span_img = span_div[0].findAll('span')
-                img_div = span_img[0].findAll('img')
+            for span in span_div:
+                span_img = span.findAll('span', {'class': 'ratiobox_content lqd'})
 
-                photo_links.append(img_div[0]['src'].split("?")[0])
+                for img in span_img:
+                    img_div = img.findAll('img')
+                    photo_links.append(img_div[0]['src'].split("?")[0])
 
-                title_div = span_div[2].findAll('h2')
+            span_content = a_div[0].findAll('span', {'class': 'box_text'})
+            for span in span_content:
+                title_div = span.findAll('h2', {'class': 'title'})
                 for title in title_div:
                     titles.append(title.text)
 
-                date_div = span_div[2].findAll('span', {'class': 'date'})
+                date_div = span.findAll('span', {'class': 'date'})
                 for date in date_div:
                     comments = date.findAll(text=lambda text:isinstance(text, Comment))
                     for comment in comments:
