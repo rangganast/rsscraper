@@ -2225,7 +2225,7 @@ def feedfahmicatperku():
         con = urllib.request.urlopen(req)
         soup3 = BeautifulSoup(con.read(), 'lxml')
 
-        news_contents = soup.findAll('div', {'id': 'watch-description-text'})
+        news_contents = soup3.findAll('div', {'id': 'watch-description-text'})
         for news in news_contents:
             p_div = news.findAll('p', {'id': 'eow-description'})
             paragraph.append(p_div[0].text)
