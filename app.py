@@ -1888,6 +1888,9 @@ def cnnwisata():
     for a in soup.find_all('article', {'class': 'ads_native_d'}):
         a.decompose()
 
+    for a in soup.find_all('div', {'class': 'box box_black mb20'}):
+        a.decompose()
+
     news_contents = soup.find_all('div', {'class': 'list media_rows middle'})
     for i in news_contents:
         contents = i.findAll('article')
@@ -1898,22 +1901,26 @@ def cnnwisata():
             a_div = soup2.findAll('a')
             links.append(a_div[0]['href'])
             
-            span_div = a_div[0].findAll('span')
+            span_div = a_div[0].findAll('span', {'class': 'ratiobox ratio_16_9 box_img'})
 
-            span_img = span_div[0].findAll('span')
-            img_div = span_img[0].findAll('img')
+            for span in span_div:
+                span_img = span.findAll('span', {'class': 'ratiobox_content lqd'})
 
-            photo_links.append(img_div[0]['src'].split("?")[0])
+                for img in span_img:
+                    img_div = img.findAll('img')
+                    photo_links.append(img_div[0]['src'].split("?")[0])
 
-            title_div = span_div[2].findAll('h2')
-            for title in title_div:
-                titles.append(title.text)
+            span_content = a_div[0].findAll('span', {'class': 'box_text'})
+            for span in span_content:
+                title_div = span.findAll('h2', {'class': 'title'})
+                for title in title_div:
+                    titles.append(title.text)
 
-            date_div = span_div[2].findAll('span', {'class': 'date'})
-            for date in date_div:
-                comments = date.findAll(text=lambda text:isinstance(text, Comment))
-                for comment in comments:
-                    datetimes.append(comment)
+                date_div = span.findAll('span', {'class': 'date'})
+                for date in date_div:
+                    comments = date.findAll(text=lambda text:isinstance(text, Comment))
+                    for comment in comments:
+                        datetimes.append(comment)
 
     datetimes_ = []
 
@@ -1983,6 +1990,9 @@ def cnnkuliner():
     datetimes = []
 
     for a in soup.find_all('article', {'class': 'ads_native_d'}):
+        a.decompose()
+
+    for a in soup.find_all('div', {'class': 'box box_black mb20'}):
         a.decompose()
 
     news_contents = soup.find_all('div', {'class': 'list media_rows middle'})
