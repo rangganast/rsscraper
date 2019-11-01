@@ -114,6 +114,12 @@ def feedkompas():
 
         datetimes_.append(d_final)
 
+    titles = list(reversed(titles))
+    links = list(reversed(links))
+    photo_links = list(reversed(photo_links))
+    datetimes_ = list(reversed(datetimes_))
+    paragraph = list(reversed(paragraph))
+
     # Send Variables to html template
     template = render_template('feedkompas.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_)
     response = make_response(template)
@@ -208,6 +214,12 @@ def feeddetik():
             newchar += char
         titles_.append(newchar)
 
+    titles = list(reversed(titles))
+    links = list(reversed(links))
+    photo_links = list(reversed(photo_links))
+    datetimes_ = list(reversed(datetimes_))
+    paragraph = list(reversed(paragraph))
+
     template = render_template('feeddetik.xml', links=links, titles=titles_, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
@@ -292,6 +304,12 @@ def feedtempo():
         d_final = day + ", " + d
 
         datetimes_.append(d_final)
+
+    titles = list(reversed(titles))
+    links = list(reversed(links))
+    photo_links = list(reversed(photo_links))
+    datetimes_ = list(reversed(datetimes_))
+    paragraph = list(reversed(paragraph))
 
     template = render_template('feedtempo.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
     response = make_response(template)
@@ -475,6 +493,11 @@ def feedkompasiana():
 
         datetimes_.append(d_final)
 
+    titles = list(reversed(titles))
+    links = list(reversed(links))
+    photo_links = list(reversed(photo_links))
+    datetimes_ = list(reversed(datetimes_))
+    paragraph = list(reversed(paragraph))
 
     template = render_template('feedkompasiana.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
     response = make_response(template)
@@ -570,6 +593,12 @@ def feedtripcanvas():
 
         datetimes_.append(d_final)
  
+    titles = list(reversed(titles))
+    links = list(reversed(links))
+    photo_links = list(reversed(photo_links))
+    datetimes_ = list(reversed(datetimes_))
+    paragraph = list(reversed(paragraph))
+
     template = render_template('feedtripcanvas.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
@@ -662,7 +691,13 @@ def feedtripcanvasindo():
         d_final = day + ", " + d
 
         datetimes_.append(d_final)
- 
+
+    titles = list(reversed(titles))
+    links = list(reversed(links))
+    photo_links = list(reversed(photo_links))
+    datetimes_ = list(reversed(datetimes_))
+    paragraph = list(reversed(paragraph))
+
     template = render_template('feedtripcanvasindo.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
@@ -699,7 +734,12 @@ def feedmytrip123():
         text_div = soup2.findAll('div', {'class': 'td-excerpt'})
         for t in text_div:
             paragraph.append(t.text)
-    
+
+    titles = list(reversed(titles))
+    links = list(reversed(links))
+    photo_links = list(reversed(photo_links))
+    paragraph = list(reversed(paragraph))
+
     template = render_template('feedmytrip123.xml', links=links, titles=titles, photo_links=photo_links, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
@@ -744,6 +784,11 @@ def feedhipwee():
         for div in par_div:
             p_div = div.findAll('p')
             paragraph.append(p_div[0].text)
+
+    titles = list(reversed(titles))
+    links = list(reversed(links))
+    photo_links = list(reversed(photo_links))
+    paragraph = list(reversed(paragraph))
 
     template = render_template('feedhipwee.xml', links=links, titles=titles, photo_links=photo_links, paragraph=paragraph)
     response = make_response(template)
@@ -852,6 +897,12 @@ def feedtirto():
 
         datetimes_.append(d_final) 
 
+    titles = list(reversed(titles))
+    links = list(reversed(links))
+    photo_links = list(reversed(photo_links))
+    datetimes_ = list(reversed(datetimes_))
+    paragraph = list(reversed(paragraph))
+
     template = render_template('feedtirto.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
@@ -939,6 +990,12 @@ def feedsindonews():
         d = d.replace(' WIB', ':00 +0700')
 
         datetimes_.append(d)
+
+    titles = list(reversed(titles))
+    links = list(reversed(links))
+    photo_links = list(reversed(photo_links))
+    datetimes_ = list(reversed(datetimes_))
+    paragraph = list(reversed(paragraph))
 
     template = render_template('feedsindonews.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
     response = make_response(template)
@@ -1037,6 +1094,10 @@ def feedbisnistravel():
     #     d = day + ', ' + d
 
     #     datetimes_.append(d)
+
+    titles = list(reversed(titles))
+    links = list(reversed(links))
+    photo_links = list(reversed(photo_links))
 
     template = render_template('feedbisnistravel.xml', links=links, titles=titles, photo_links=photo_links)
     response = make_response(template)
@@ -1138,6 +1199,11 @@ def feedkontan():
 
         datetimes_.append(d)
 
+    titles = list(reversed(titles))
+    links = list(reversed(links))
+    photo_links = list(reversed(photo_links))
+    datetimes_ = list(reversed(datetimes_))
+    paragraph = list(reversed(paragraph))
 
     template = render_template('feedkontan.xml', news_contents=li_div, links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
     response = make_response(template)
@@ -1222,6 +1288,11 @@ def feedokezone():
     #     d = d.replace(' WIB', ':00 +0700')
 
     #     datetimes_.append(d)
+
+    titles = list(reversed(titles))
+    links = list(reversed(links))
+    photo_links = list(reversed(photo_links))
+    paragraph = list(reversed(paragraph))
 
     template = render_template('feedokezone.xml', links=links, titles=titles, photo_links=photo_links, paragraph=paragraph)
     response = make_response(template)
@@ -1315,6 +1386,12 @@ def feedberitasatuwisata():
 
         datetimes_.append(d)
 
+    titles = list(reversed(titles))
+    links = list(reversed(links))
+    photo_links = list(reversed(photo_links))
+    datetimes_ = list(reversed(datetimes_))
+    paragraph = list(reversed(paragraph))
+
     template = render_template('feedberitasatuwisata.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
@@ -1407,6 +1484,12 @@ def feedberitasatukuliner():
 
         datetimes_.append(d)
 
+    titles = list(reversed(titles))
+    links = list(reversed(links))
+    photo_links = list(reversed(photo_links))
+    datetimes_ = list(reversed(datetimes_))
+    paragraph = list(reversed(paragraph))
+
     template = render_template('feedberitasatukuliner.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
@@ -1487,6 +1570,12 @@ def feedpikiranrakyat():
 
         datetimes_.append(d)    
     
+    titles = list(reversed(titles))
+    links = list(reversed(links))
+    photo_links = list(reversed(photo_links))
+    datetimes_ = list(reversed(datetimes_))
+    paragraph = list(reversed(paragraph))
+
     template = render_template('feedpikiranrakyat.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
@@ -1571,6 +1660,12 @@ def feedkemenpar():
         d += ' 00:00:00 +0700'
 
         datetimes_.append(d)
+
+    titles = list(reversed(titles))
+    links = list(reversed(links))
+    photo_links = list(reversed(photo_links))
+    datetimes_ = list(reversed(datetimes_))
+    paragraph = list(reversed(paragraph))
 
     template = render_template('feedkemenpar.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
     response = make_response(template)
@@ -1671,7 +1766,12 @@ def feedidntimes():
 
         datetimes_.append(d_final)
 
-    template = render_template('feedidntimes.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
+    titles = list(reversed(titles))
+    links = list(reversed(links))
+    photo_links = list(reversed(photo_links))
+    datetimes_ = list(reversed(datetimes_))
+
+    template = render_template('feedidntimes.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
 
@@ -1774,6 +1874,12 @@ def feedtribunnews():
         d_final = day + ", " + d_
 
         datetimes_.append(d_final)
+
+    titles = list(reversed(titles))
+    links = list(reversed(links))
+    photo_links = list(reversed(photo_links))
+    datetimes_ = list(reversed(datetimes_))
+    paragraph = list(reversed(paragraph))
 
     template = render_template('feedtribunnews.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
     response = make_response(template)
@@ -1884,7 +1990,12 @@ def feedjakartapost():
     #     d_final = day + ", " + d_
 
     #     datetimes_.append(d)
-    
+
+    titles = list(reversed(titles))
+    links = list(reversed(links))
+    photo_links = list(reversed(photo_links))
+    paragraph = list(reversed(paragraph))
+
     template = render_template('feedjakartapost.xml', links=links, titles=titles, photo_links=photo_links, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
@@ -1987,6 +2098,11 @@ def feedcnnwisata():
         d_final = day + ", " + d_
 
         datetimes_.append(d_final)
+
+    titles = list(reversed(titles))
+    links = list(reversed(links))
+    photo_links = list(reversed(photo_links))
+    datetimes_ = list(reversed(datetimes_))
 
     template = render_template('feedcnnwisata.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_)
     response = make_response(template)
@@ -2091,6 +2207,11 @@ def feedcnnkuliner():
 
         datetimes_.append(d_final)
 
+    titles = list(reversed(titles))
+    links = list(reversed(links))
+    photo_links = list(reversed(photo_links))
+    datetimes_ = list(reversed(datetimes_))
+
     template = render_template('feedcnnkuliner.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
@@ -2191,6 +2312,12 @@ def feedberdesa():
 
         datetimes_.append(d_final)
 
+    titles = list(reversed(titles))
+    links = list(reversed(links))
+    photo_links = list(reversed(photo_links))
+    datetimes_ = list(reversed(datetimes_))
+    paragraph = list(reversed(paragraph))
+
     template = render_template('feedberdesa.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
@@ -2249,6 +2376,11 @@ def feedyoutubefahmicatperku():
             p_div = news.findAll('p', {'id': 'eow-description'})
             paragraph.append(p_div[0].text)
 
+    titles = list(reversed(titles))
+    links = list(reversed(links))
+    photo_links = list(reversed(photo_links))
+    paragraph = list(reversed(paragraph))
+
     template = render_template('feedyoutubefahmicatperku.xml', links=links, titles=titles, photo_links=photo_links, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
@@ -2306,6 +2438,11 @@ def feedyoutubewiranur():
         for news in news_contents:
             p_div = news.findAll('p', {'id': 'eow-description'})
             paragraph.append(p_div[0].text)
+
+    titles = list(reversed(titles))
+    links = list(reversed(links))
+    photo_links = list(reversed(photo_links))
+    paragraph = list(reversed(paragraph))
 
     template = render_template('feedyoutubewiranur.xml', links=links, titles=titles, photo_links=photo_links, paragraph=paragraph)
     response = make_response(template)
