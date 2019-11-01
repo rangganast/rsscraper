@@ -1086,9 +1086,9 @@ def feedkontan():
                             links.append('https://lifestyle.kontan.co.id' + a_div[0]['href'])
                             titles.append(a_div[0].text)
                     
-                span_div = content.findAll('span', {'class': 'font-gray'})
-                for span in span_div:
-                    datetimes.append(span.text)
+                    span_div = content.findAll('span', {'class': 'font-gray'})
+                    for span in span_div:
+                        datetimes.append(span.text)
 
     datetimes_ = []
 
