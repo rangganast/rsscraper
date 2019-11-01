@@ -214,12 +214,6 @@ def feeddetik():
             newchar += char
         titles_.append(newchar)
 
-    titles = list(reversed(titles))
-    links = list(reversed(links))
-    photo_links = list(reversed(photo_links))
-    datetimes_ = list(reversed(datetimes_))
-    paragraph = list(reversed(paragraph))
-
     template = render_template('feeddetik.xml', links=links, titles=titles_, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
@@ -2295,8 +2289,6 @@ def feedberdesa():
     }
 
     for d in datetimes:
-
-
         
         if d[:2].isdigit() == False:
             d = '0' + d
