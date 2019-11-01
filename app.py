@@ -1054,25 +1054,41 @@ def feedkontan():
     paragraph = []
     datetimes = []
 
-    news_contents = soup.findAll('div', {'class': 'list-berita'})
+    for div in soup.find_all('div', {'id': 'berita-terpopuler'}):
+        div.decompose()
+
+    for style in soup.find_all('div', {'style': 'height:280px;'}):
+        style.decompose()
+
+    news_contents = soup.find_all('div', {'class': 'list-berita'})
 
     for i in news_contents:
         soup2 = BeautifulSoup(str(i), 'lxml')
 
-        li_div = soup2.findAll('li')
-        for li in li_div:
-            a_div = li.findAll('a')
-            links.append('https://lifestyle.kontan.co.id' + a_div[0]['href'])
+        ul_div = soup2.findAll('ul', {'id': 'list-news'})
+        for ul in ul_div:
+            li_div = ul.find_all('li')
+            for li in li_div:
+                a_div = li.findAll('a')
 
-            for a in a_div:
-                img_div = a.findAll('img')
-                for img in img_div:
-                    photo_links.append('https:' + img['src'])
-                    titles.append(img['title'])
+                for a in a_div:
+                    img_div = a.findAll('img')
+                    for img in img_div:
+                        photo_links.append('https:' + img['src'])
 
-            span_div = li.findAll('span', {'class': 'font-gray'})
-            for span in span_div:
-                datetimes.append(span.text)
+                content_div = li.findAll('div', {'class': 'ket'})
+                for content in content_div:
+                    title_div = content.findAll('div', {'class': 'sp-hl linkto-black'})
+                    for title in title_div:
+                        h1_div = title.findAll('h1')
+                        for h1 in h1_div:
+                            a_div = h1.findAll('a')
+                            links.append('https://lifestyle.kontan.co.id' + a_div[0]['href'])
+                            titles.append(a_div[0].text)
+                    
+                span_div = li.findAll('span', {'class': 'font-gray'})
+                for span in span_div:
+                    datetimes.append(span.text)
 
     datetimes_ = []
 
@@ -1120,7 +1136,7 @@ def feedkontan():
         datetimes_.append(d)
 
 
-    template = render_template('feedkontan.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
+    template = render_template('feedkontan.xml', news_contents=li_div, links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
 
