@@ -219,6 +219,9 @@ def feedtempo():
     d = datetime.datetime.today()
     now_date = '{}/{}/{}'.format(d.year, d.month, d.day)
 
+    if now_date[-2:].isdigit() == False:
+        now_date = now_date[:-1] + '0' + now_date[-1]
+
     url = 'https://tempo.co/indeks/' + now_date + '/travel'
     req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
     con = urllib.request.urlopen(req)
@@ -277,7 +280,7 @@ def feedtempo():
 
     for d in datetimes:
         if d[:2].isdigit() == False:
-            d = d.replace(d[5], '0' + d[5])
+            d = '0' + d
 
         for before, after in month_dict.items():
             d = d.replace(before, after)
