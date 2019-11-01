@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, redirect, make_response, session
+from flask import Flask, render_template, request, url_for, redirect, make_response
 from bs4 import BeautifulSoup, Comment
 import urllib
 import urllib3
@@ -466,7 +466,7 @@ def feedkompasiana():
         d = d + ':00 +0700'
 
         d_ = ' '.join([check_dict.get(i, i) for i in d.split()])
-        day = datetime.datetime.strptime(d_[:15], '%d %B %Y').strftime('%a')
+        day = datetime.datetime.strptime(d_[:-15], '%d %B %Y').strftime('%a')
         d_final = day + ", " + d
         d_final = d_final.replace('  ', ' ')
 
@@ -1924,18 +1924,18 @@ def feedcnnwisata():
     datetimes_ = []
 
     month_dict = {
-        '01 ': 'Jan ',
-        '02 ': 'Feb ',
-        '03 ': 'Mar ',
-        '04 ': 'Apr ',
-        '05 ': 'May ',
-        '06 ': 'Jun ',
-        '07 ': 'Jul ',
-        '08 ': 'Aug ',
-        '09 ': 'Sep ',
-        '10 ': 'Oct ',
-        '11 ': 'Nov ',
-        '12 ': 'Dec ',
+        ' 01 ': ' Jan ',
+        ' 02 ': ' Feb ',
+        ' 03 ': ' Mar ',
+        ' 04 ': ' Apr ',
+        ' 05 ': ' May ',
+        ' 06 ': ' Jun ',
+        ' 07 ': ' Jul ',
+        ' 08 ': ' Aug ',
+        ' 09 ': ' Sep ',
+        ' 10 ': ' Oct ',
+        ' 11 ': ' Nov ',
+        ' 12 ': ' Dec ',
     }
 
     check_dict = {
@@ -2027,18 +2027,18 @@ def feedcnnkuliner():
     datetimes_ = []
 
     month_dict = {
-        '01 ': 'Jan ',
-        '02 ': 'Feb ',
-        '03 ': 'Mar ',
-        '04 ': 'Apr ',
-        '05 ': 'May ',
-        '06 ': 'Jun ',
-        '07 ': 'Jul ',
-        '08 ': 'Aug ',
-        '09 ': 'Sep ',
-        '10 ': 'Oct ',
-        '11 ': 'Nov ',
-        '12 ': 'Dec ',
+        ' 01 ': ' Jan ',
+        ' 02 ': ' Feb ',
+        ' 03 ': ' Mar ',
+        ' 04 ': ' Apr ',
+        ' 05 ': ' May ',
+        ' 06 ': ' Jun ',
+        ' 07 ': ' Jul ',
+        ' 08 ': ' Aug ',
+        ' 09 ': ' Sep ',
+        ' 10 ': ' Oct ',
+        ' 11 ': ' Nov ',
+        ' 12 ': ' Dec ',
     }
 
     check_dict = {
