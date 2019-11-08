@@ -343,15 +343,15 @@ def feedkumparanbudaya():
         image_div = noscript_div[0].findAll('img')
         photo_links.append(image_div[0]['src'])
 
-    for link in links:
-        req = urllib.request.Request(link, headers={'User-Agent': "Magic Browser"})
-        con = urllib.request.urlopen(req)
-        soup3 = BeautifulSoup(con.read(), 'lxml')
+    # for link in links:
+    #     req = urllib.request.Request(link, headers={'User-Agent': "Magic Browser"})
+    #     con = urllib.request.urlopen(req)
+    #     soup3 = BeautifulSoup(con.read(), 'lxml')
 
-        span_div = soup3.findAll('span', {'class': 'Textweb__StyledText-sc-2upo8d-0 ceLXoP'})
-        datetimes.append(span_div[0].text)
+    #     span_div = soup3.findAll('span', {'class': 'Textweb__StyledText-sc-2upo8d-0 ceLXoP'})
+    #     datetimes.append(span_div[0].text)
 
-    template = render_template('feedkumparanbudaya.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes, paragraph=paragraph)
+    template = render_template('feedkumparanbudaya.xml', links=links, titles=titles, photo_links=photo_links, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
 

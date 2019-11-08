@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>Travel-Feed KumparanTravel</title>
+        <title>Travel-Feed TripCanvas Indonesia</title>
         <link>https://travel-feed-coba.herokuapp.com</link>
         <description>Travel-Feed Holahalo Beta</description>
         <image>
-            <title>Travel-Feed KumparanTravel</title>
+            <title>Travel-Feed TripCanvas Indonesia</title>
             <link>https://travel-feed-coba.herokuapp.com</link>
             <url>https://www.collaboration133.com/wp-content/uploads/2011/06/rss.gif</url>
         </image>
+        {% for i in range(links|length) %}
         <item>
-            {{datetimes}}
+            <title>{{titles[i]}}</title>
+            <link>{{links[i]}}</link>
+            <guid>{{links[i]}}</guid>
+            <description>
+                <![CDATA[
+            <img src="{{photo_links[i]}}">
+            {{paragraph[i]}}
+            ]]>
+            </description>
         </item>
-        <atom:link href="http://travel-feed-coba.herokuapp.com/feed/kumparanbudaya" rel="self" type="application/rss+xml" />
+        {% endfor %}
+        <atom:link href="http://travel-feed-coba.herokuapp.com/feed/tripcanvasindo" rel="self" type="application/rss+xml" />
     </channel>
 </rss>
