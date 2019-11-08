@@ -311,9 +311,9 @@ def feedtempo():
 
     return response
 
-@app.route('/feed/kumparan')
-def feedkumparan():
-    url = 'https://kumparan.com/kumparantravel'
+@app.route('/feed/kumparanbudaya')
+def feedkumparanbudaya():
+    url = 'https://kumparan.com/topic/budaya'
     req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
     con = urllib.request.urlopen(req)
     soup = BeautifulSoup(con.read(), 'lxml')
@@ -324,76 +324,34 @@ def feedkumparan():
     datetimes = []
     paragraph = []
 
-    news_contents = soup.find_all('div', {'class': 'Viewweb__StyledView-sc-61094a-0 fPqoSZ'})
+    news_contents = soup.find_all('div', {'class', 'Viewweb__StyledView-sc-61094a-0 gTzLPT'})
 
     for i in news_contents:
         soup2 = BeautifulSoup(str(i), 'lxml')
+        title_div = soup2.findAll('div', {'class': 'Viewweb__StyledView-sc-61094a-0 fNfbQb'})
+        
+        a_div = title_div[0].findAll('a')
+        links.append('https://kumparan.com' + a_div[0]['href'])
 
-        divs = soup2.findAll('div', {'class': 'Viewweb__StyledView-sc-61094a-0 fNfbQb'})
-        for div in divs:
-            title = div.findAll('h2', {'class': 'Textweb__StyledText-sc-2upo8d-0 msdeg'})
-            for t in title:
-                titles.append(t.text)
-                link = t.find('a')['href']
-                links.append(link)
+        span_div = title_div[0].findAll('span')
+        titles.append(span_div[0].text)
+        paragraph.append(span_div[0].text)
 
-            image_div = soup2.findAll('img', {'class': 'no-script'})
-            for i in image_div:
-                photo_links.append(i['src'])
+        photo_div = soup2.findAll('div', {'class': 'Viewweb__StyledView-sc-61094a-0 jzpHoE'})
+        noscript_div = photo_div[0].findAll('noscript')
 
-    links_ = []
+        image_div = noscript_div[0].findAll('img')
+        photo_links.append(image_div[0]['src'])
+
     for link in links:
-        links_.append('https://kumparan.com' + link)
-
-    for i in links:
-        url = 'https://kumparan.com' + i
-        req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
+        req = urllib.request.Request(link, headers={'User-Agent': "Magic Browser"})
         con = urllib.request.urlopen(req)
         soup3 = BeautifulSoup(con.read(), 'lxml')
 
-        d_times = soup3.findAll('div', {'class': 'Viewweb__StyledView-sc-61094a-0 bBekbp'})
-        for d in d_times:
-            times = d.findAll('div', {'class': 'TextBoxweb__StyledTextBox-n41hy7-0 duIFRd'})
-            for t in times:
-                spans = t.findAll('span', {'class': 'Textweb__StyledText-sc-2upo8d-0 ceLXoP'})
-                for s in spans:
-                    datetimes.append(s.text)
+        span_div = soup3.findAll('span', {'class': 'Textweb__StyledText-sc-2upo8d-0 ceLXoP'})
+        datetimes.append(span_div[0].text)
 
-        par_div = soup3.findAll('span', {'class': 'Textweb__StyledText-sc-2upo8d-0 dxEmzN'})
-        for p in par_div:
-            paragraph.append(p.text)
-
-        links_.append(url)
-
-    datetimes_ = []
-
-    day_dict = {
-        'Senin': 'Mon',
-        'Selasa': 'Tue',
-        'Rabu': 'Wed',
-        'Kamis': 'Thu',
-        "Jum'at": 'Fri',
-        'Sabtu': 'Sat',
-        'Minggu': 'Sun'
-    }
-
-    month_dict = {
-        'Agu': 'Aug',
-        'Okt': 'Oct',
-        'Des': 'Dec'
-    }
-
-    for d in datetimes:
-        for before, after in day_dict.items():
-            d = d.replace(before, after)
-
-        for before, after in month_dict.items():
-            d = d.replace(before, after)
-        
-        d = d.replace(' WIB', ':00 +0700')
-        datetimes_.append(d)
-
-    template = render_template('feedkumparan.xml', links=links_, titles=titles, photo_links=photo_links, datetimes=datetimes, paragraph=paragraph)
+    template = render_template('feedkumparanbudaya.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
 

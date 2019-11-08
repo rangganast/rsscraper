@@ -9,20 +9,9 @@
             <link>https://travel-feed-coba.herokuapp.com</link>
             <url>https://www.collaboration133.com/wp-content/uploads/2011/06/rss.gif</url>
         </image>
-        {% for i in range(links|length) %}
         <item>
-            <title>{{titles[i]}}</title>
-            <link>{{links[i]}}</link>
-            <guid>{{links[i]}}</guid>
-            <pubDate>{{datetimes[i]}}</pubDate>
-            <description>
-                <![CDATA[
-            <img src="{{photo_links[i]}}">
-            {{paragraph[i]}}
-            ]]>
-            </description>
+            {{datetimes}}
         </item>
-        {% endfor %}
-        <atom:link href="http://travel-feed-coba.herokuapp.com/feed/kumparan" rel="self" type="application/rss+xml" />
+        <atom:link href="http://travel-feed-coba.herokuapp.com/feed/kumparanbudaya" rel="self" type="application/rss+xml" />
     </channel>
 </rss>
