@@ -356,6 +356,53 @@ def feedkumparanbudaya():
 
     return response
 
+@app.route('/feed/kumparanfoodntravel')
+def feedkumparanfoodntravel():
+    url = 'https://kumparan.com/channel/food-travel'
+    req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
+    con = urllib.request.urlopen(req)
+    soup = BeautifulSoup(con.read(), 'lxml')
+
+    titles = []
+    links = []
+    photo_links = []
+    paragraph = []
+
+    contents = soup.findAll('div', {'class': 'NewsCardContainerweb__Container-sc-1fei86o-0 dJLnBq Viewweb__StyledView-sc-61094a-0 eSxQMX'})
+
+    news_contents = contents[0].find_all('div', {'class', 'Viewweb__StyledView-sc-61094a-0 gTzLPT'})
+
+    for i in news_contents:
+        soup2 = BeautifulSoup(str(i), 'lxml')
+        title_div = soup2.findAll('div', {'class': 'Viewweb__StyledView-sc-61094a-0 fNfbQb'})
+        
+        a_div = title_div[0].findAll('a')
+        links.append('https://kumparan.com' + a_div[0]['href'])
+
+        span_div = title_div[0].findAll('span')
+        titles.append(span_div[0].text)
+        paragraph.append(span_div[0].text)
+
+        photo_div = soup2.findAll('div', {'class': 'Viewweb__StyledView-sc-61094a-0 jzpHoE'})
+        noscript_div = photo_div[0].findAll('noscript')
+
+        image_div = noscript_div[0].findAll('img')
+        photo_links.append(image_div[0]['src'])
+
+    # for link in links:
+    #     req = urllib.request.Request(link, headers={'User-Agent': "Magic Browser"})
+    #     con = urllib.request.urlopen(req)
+    #     soup3 = BeautifulSoup(con.read(), 'lxml')
+
+    #     span_div = soup3.findAll('span', {'class': 'Textweb__StyledText-sc-2upo8d-0 ceLXoP'})
+    #     datetimes.append(span_div[0].text)
+
+    template = render_template('feedkumparanfoodntravel.xml', links=links, titles=titles, photo_links=photo_links, paragraph=paragraph)
+    response = make_response(template)
+    response.headers['Content-Type'] = 'application/xml'
+
+    return response
+
 @app.route('/feed/kompasiana')
 def feedkompasiana():
     url = 'https://www.kompasiana.com/wisata'
