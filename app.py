@@ -2446,5 +2446,69 @@ def feedyoutubewiranur():
 
     return response
 
+@app.route('/feed/catperku')
+def feedcatperku():
+    url = 'https://catperku.com'
+    req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
+    con = urllib.request.urlopen(req)
+    soup = BeautifulSoup(con.read(), 'lxml')
+
+    titles = []
+    links = []
+    photo_links = []
+    paragraph = []
+    datetimes = []
+
+    news_contents = soup.find_all('div', {'class': 'gdlr-core-blog-grid'})
+    for i in news_contents:
+        soup2 = BeautifulSoup(str(i), 'lxml')
+
+        image_div = soup.findAll('div', {'class': 'gdlr-core-blog-thumbnail'})
+        for div in image_div:
+            a_div = div.findAll('a')
+            links.append(a_div[0]['href'])
+            for a in a_div:
+                img_div = a.findAll('img')
+                photo_links.append(img_div[0]['src'].split("?")[0])
+
+        content_div = soup.findAll('div', {'class': 'gdlr-core-blog-grid-content-wrap'})
+
+        for div in content_div:
+            date_div = div.findAll('div', {'class': 'gdlr-core-blog-grid-date'})
+            for date in date_div:
+                span_div = date.findAll('span', {'class': 'gdlr-core-blog-info gdlr-core-blog-info-font gdlr-core-skin-caption gdlr-core-blog-info-date'})
+                for span in span_div:
+                    a_div = span.findAll('a')
+                    datetimes.append(a_div[0].text)
+
+            h3_div = div.findAll('h3', {'class': 'gdlr-core-blog-title gdlr-core-skin-title'})
+            for h3 in h3_div:
+                a_div = h3.findAll('a')
+                titles.append(a_div[0].text)
+            
+            text_div = div.findAll('div', {'class': 'gdlr-core-blog-content'})
+
+            for a in text_div[0].findAll('a'):
+                a.decompose()
+
+            paragraph.append(text_div[0].text)
+
+    datetimes_ = []
+
+    for d in datetimes:
+        d_ = datetime.datetime.strptime(d, "%B %d, %Y")
+        d_ = d_.strftime("%d %b %Y")
+    
+        day = datetime.datetime.strptime(d_, '%d %b %Y').strftime('%a')
+        d_final = day + ", " + d_ + " 00:00:00 +0700"
+
+        datetimes_.append(d_final)
+
+    template = render_template('feedcatperku.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
+    response = make_response(template)
+    response.headers['Content-Type'] = 'application/xml'
+
+    return response
+
 if __name__ == '__main__':
     app.run(debug=True)
