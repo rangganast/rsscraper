@@ -320,11 +320,11 @@ def feedkumparanbudaya():
     photo_links = []
     paragraph = []
 
-    news_contents = soup.find_all('div', {'class', 'Viewweb__StyledView-sc-61094a-0 gTzLPT'})
+    news_contents = soup.find_all('div', {'class', 'Viewweb__StyledView-sc-61094a-0 dmxBow'})
 
     for i in news_contents:
         soup2 = BeautifulSoup(str(i), 'lxml')
-        title_div = soup2.findAll('div', {'class': 'Viewweb__StyledView-sc-61094a-0 fNfbQb'})
+        title_div = soup2.findAll('div', {'class': 'Viewweb__StyledView-sc-61094a-0 ekmMxZ'})
         
         a_div = title_div[0].findAll('a')
         links.append('https://kumparan.com' + a_div[0]['href'])
@@ -333,7 +333,7 @@ def feedkumparanbudaya():
         titles.append(span_div[0].text)
         paragraph.append(span_div[0].text)
 
-        photo_div = soup2.findAll('div', {'class': 'Viewweb__StyledView-sc-61094a-0 jzpHoE'})
+        photo_div = soup2.findAll('div', {'class': 'Viewweb__StyledView-sc-61094a-0 fWLoLk'})
         noscript_div = photo_div[0].findAll('noscript')
 
         image_div = noscript_div[0].findAll('img')
