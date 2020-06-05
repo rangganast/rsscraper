@@ -365,13 +365,13 @@ def feedkumparanfoodntravel():
     photo_links = []
     paragraph = []
 
-    contents = soup.findAll('div', {'class': 'NewsCardContainerweb__Container-sc-1fei86o-0 dJLnBq Viewweb__StyledView-sc-61094a-0 eSxQMX'})
+    contents = soup.findAll('div', {'class': 'NewsCardContainerweb__Scroll-sc-1fei86o-2 iLYgNB'})
 
-    news_contents = contents[0].find_all('div', {'class', 'Viewweb__StyledView-sc-61094a-0 gTzLPT'})
+    news_contents = contents[0].find_all('div', {'class', 'Viewweb__StyledView-sc-61094a-0 kKMshW'})
 
     for i in news_contents:
         soup2 = BeautifulSoup(str(i), 'lxml')
-        title_div = soup2.findAll('div', {'class': 'Viewweb__StyledView-sc-61094a-0 fNfbQb'})
+        title_div = soup2.findAll('div', {'class': 'TextBoxweb__StyledTextBox-n41hy7-0 fFrTQp'})
         
         a_div = title_div[0].findAll('a')
         links.append('https://kumparan.com' + a_div[0]['href'])
@@ -380,7 +380,7 @@ def feedkumparanfoodntravel():
         titles.append(span_div[0].text)
         paragraph.append(span_div[0].text)
 
-        photo_div = soup2.findAll('div', {'class': 'Viewweb__StyledView-sc-61094a-0 jzpHoE'})
+        photo_div = soup2.findAll('div', {'class': 'Viewweb__StyledView-sc-61094a-0 fWLoLk'})
         noscript_div = photo_div[0].findAll('noscript')
 
         image_div = noscript_div[0].findAll('img')
