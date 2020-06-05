@@ -223,10 +223,7 @@ def feeddetik():
 @app.route('/feed/tempo')
 def feedtempo():
     d = datetime.datetime.today()
-    now_date = '{}/{}/{}'.format(d.year, d.month, d.day)
-
-    if now_date[-2:].isdigit() == False:
-        now_date = now_date[:-1] + '0' + now_date[-1]
+    now_date = '{}/{}/{}'.format(d.strftime('%Y'), d.strftime('%m'), d.strftime('%d'))
 
     url = 'https://tempo.co/indeks/' + now_date + '/travel'
     req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
