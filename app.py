@@ -554,6 +554,7 @@ def feedtripcanvas():
     datetimes_ = []
 
     month_dict = {
+        'Mei': 'May',
         'Agu': 'Aug',
         'Okt': 'Oct',
         'Des': 'Dec'
@@ -583,7 +584,7 @@ def feedtripcanvas():
         d += ' 00:00:00 +0700'
 
         d_ = ' '.join([check_dict.get(i, i) for i in d.split()])
-        day = datetime.datetime.strptime(d_[:-15], '%d %B %Y').strftime('%a')
+        day = datetime.datetime.strptime(d_[:-15], '%d %b %Y').strftime('%a')
         d_final = day + ", " + d
 
         datetimes_.append(d_final)
@@ -683,7 +684,7 @@ def feedtripcanvasindo():
         d += ' 00:00:00 +0700'
 
         d_ = ' '.join([check_dict.get(i, i) for i in d.split()])
-        day = datetime.datetime.strptime(d_[:-15], '%d %B %Y').strftime('%a')
+        day = datetime.datetime.strptime(d_[:-15], '%d %b %Y').strftime('%a')
         d_final = day + ", " + d
 
         datetimes_.append(d_final)
