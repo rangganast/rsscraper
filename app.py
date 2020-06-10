@@ -654,6 +654,7 @@ def feedtripcanvasindo():
     datetimes_ = []
 
     month_dict = {
+        'Mei': 'May',
         'Agu': 'Aug',
         'Okt': 'Oct',
         'Des': 'Dec'
