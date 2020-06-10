@@ -380,10 +380,9 @@ def feedkumparanfoodntravel():
         titles.append(span_div[0].text)
         paragraph.append(span_div[0].text)
 
-        photo_div = soup2.findAll('div', {'class': 'Viewweb__StyledView-sc-61094a-0 fWLoLk'})
-        noscript_div = photo_div[0].findAll('noscript')
+        photo_div = soup2.findAll('div', {'class': 'Helper__MediaWrapper-sc-1cebgcc-10 fEqkZV'})
 
-        image_div = noscript_div[0].findAll('img')
+        image_div = photo_div[0].findAll('img')
         photo_links.append(image_div[0]['src'])
 
     # for link in links:
