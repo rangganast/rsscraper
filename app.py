@@ -381,7 +381,7 @@ def feedkumparanfoodntravel():
         titles.append(span_div[0].text)
         paragraph.append(span_div[0].text)
 
-        photo_div = soup2.findAll('div', {'class': 'Thumbnailweb__ThumbnailContainer-xodrtt-2 goTQKp'})
+        photo_div = soup2.findAll('div', {'class': 'Imageweb__ImageWrapper-jbq3ml-0 UKLvj'})
         print(photo_div)
         noscript_div = photo_div[0].findAll('noscript')
 
