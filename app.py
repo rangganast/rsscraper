@@ -367,7 +367,7 @@ def feedkumparanfoodntravel():
 
     contents = soup.findAll('div', {'class': 'NewsCardContainerweb__Scroll-sc-1fei86o-2 iLYgNB'})
 
-    news_contents = contents[0].find_all('div', {'class', 'Viewweb__StyledView-sc-61094a-0 kKMshW'})
+    news_contents = contents[1].find_all('div', {'class', 'Viewweb__StyledView-sc-61094a-0 kKMshW'})
 
     for i in news_contents:
         soup2 = BeautifulSoup(str(i), 'lxml')
