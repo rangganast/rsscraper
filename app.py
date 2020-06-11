@@ -383,7 +383,8 @@ def feedkumparanfoodntravel():
 
         photo_div = soup2.findAll('div', {'class': 'Imageweb__ImageWrapper-jbq3ml-0 UKLvj'})
 
-        image_div = photo_div[0].find('style')
+        image_div = str(photo_div[0].find('style'))
+        print(image_div)
         image_div = image_div[image_div.find("(")+1:image_div.find(")")]
         print(image_div)
         # photo_links.append(image_div[0]['src'])
