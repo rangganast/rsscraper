@@ -384,10 +384,7 @@ def feedkumparanfoodntravel():
         photo_div = soup2.findAll('div', {'class': 'Imageweb__ImageWrapper-jbq3ml-0 UKLvj'})
 
         image_div = str(photo_div[0]['style'])
-        print(image_div)
-        image_div = image_div[image_div.find("(")+1:image_div.find(")")]
-        print(image_div)
-        # photo_links.append(image_div[0]['src'])
+        photo_links.append(image_div[image_div.find("(")+1:image_div.find(")")])
 
     # for link in links:
     #     req = urllib.request.Request(link, headers={'User-Agent': "Magic Browser"})
