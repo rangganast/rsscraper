@@ -371,6 +371,7 @@ def feedkumparanfoodntravel():
 
     for i in news_contents:
         soup2 = BeautifulSoup(str(i), 'lxml')
+        print(soup2)
         title_div = soup2.findAll('div', {'class': 'TextBoxweb__StyledTextBox-n41hy7-0 fFrTQp'})
         
         a_div = title_div[0].findAll('a')
@@ -381,6 +382,7 @@ def feedkumparanfoodntravel():
         paragraph.append(span_div[0].text)
 
         photo_div = soup2.findAll('div', {'class': 'Thumbnailweb__ThumbnailContainer-xodrtt-2 goTQKp'})
+        print(photo_div)
         noscript_div = photo_div[0].findAll('noscript')
 
         image_div = noscript_div[0].findAll('img')
