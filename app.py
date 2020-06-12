@@ -371,7 +371,6 @@ def feedkumparanfoodntravel():
 
     for i in news_contents:
         soup2 = BeautifulSoup(str(i), 'lxml')
-        print(soup2)
         title_div = soup2.findAll('div', {'class': 'TextBoxweb__StyledTextBox-n41hy7-0 fFrTQp'})
         
         a_div = title_div[0].findAll('a')
@@ -1121,33 +1120,31 @@ def feedkontan():
     for style in soup.find_all('div', {'style': 'height:280px;'}):
         style.decompose()
 
-    news_contents = soup.find_all('div', {'class': 'list-berita'})
+    news_contents = soup.find_all('div', {'class': 'list_nws'})
 
     for i in news_contents:
         soup2 = BeautifulSoup(str(i), 'lxml')
 
-        ul_div = soup2.findAll('ul', {'id': 'list-news'})
+        ul_div = soup2.findAll('ul')
         for ul in ul_div:
             li_div = ul.find_all('li')
             for li in li_div:
-                a_div = li.findAll('a')
+                img_div = li.findAll('div', {'class': 'thumb_ls'})
 
-                for a in a_div:
-                    img_div = a.findAll('img')
-                    for img in img_div:
-                        photo_links.append('https:' + img['src'])
+                for img in img_div:
+                    img = img.findAll('img')
+                    for i in img:
+                        photo_links.append('https:' + i['data-src'])
 
-                content_div = li.findAll('div', {'class': 'ket'})
+                content_div = li.findAll('div', {'class': 'ls_txt'})
                 for content in content_div:
-                    title_div = content.findAll('div', {'class': 'sp-hl linkto-black'})
-                    for title in title_div:
-                        h1_div = title.findAll('h1')
-                        for h1 in h1_div:
-                            a_div = h1.findAll('a')
-                            links.append('https://lifestyle.kontan.co.id' + a_div[0]['href'])
-                            titles.append(a_div[0].text)
+                    h2_div = li.findAll('h2', {'class' : 'jdl_lst'})
+                    for h2 in h2_div:
+                        a_div = h2.findAll('a')
+                        links.append(a_div[0]['href'])
+                        titles.append(a_div[0].text)
                     
-                    span_div = content.findAll('span', {'class': 'font-gray'})
+                    span_div = content.findAll('span', {'class': 'gr_ls'})
                     for span in span_div:
                         datetimes.append(span.text)
 
@@ -1179,22 +1176,18 @@ def feedkontan():
     }
 
     for d in datetimes:
-
-        d = d[1:]
+        d_date = d.split(' | ')[0]
+        d_time = d.split(' | ')[1]
 
         for before, after in day_dict.items():
-            d = d.replace(before, after)
-
-        if d[5:7].isdigit() == False:
-            d = d.replace(d[5], '0' + d[5])
+            d_date = d_date.replace(before, after)
 
         for before, after in month_dict.items():
-            d = d.replace(before, after)
+            d_date = d_date.replace(before, after)
 
-        d = d.replace('/ ', '')
-        d = d.replace(' WIB', ':00 +0700')
+        d_time = d_time.replace(' WIB', ':00 +0700')
 
-        datetimes_.append(d)
+        datetimes_.append(d_date + ' ' + d_time)
 
     titles = list(reversed(titles))
     links = list(reversed(links))
@@ -1202,7 +1195,7 @@ def feedkontan():
     datetimes_ = list(reversed(datetimes_))
     paragraph = list(reversed(paragraph))
 
-    template = render_template('feedkontan.xml', news_contents=li_div, links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
+    template = render_template('feedkontan.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
 
@@ -1581,7 +1574,7 @@ def feedpikiranrakyat():
 
 @app.route('/feed/kemenpar')
 def feedkemenpar():
-    url = 'http://www.kemenpar.go.id/categories/berita-utama'
+    url = 'https://www.kemenparekraf.go.id/index.php/categories/berita-utama'
     req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
     con = urllib.request.urlopen(req)
     soup = BeautifulSoup(con.read(), 'lxml')
@@ -2009,99 +2002,91 @@ def feedcnnwisata():
     titles = []
     links = []
     photo_links = []
-    datetimes = []
+    # datetimes = []
 
-    for a in soup.find_all('article', {'class': 'ads_native_d'}):
+    for a in soup.find_all('div', {'class': 'wisata_video box mb20'}):
         a.decompose()
 
-    for a in soup.find_all('div', {'class': 'box box_black mb20'}):
+    for a in soup.find_all('div', {'class': 'cb_terpopuler mb20 box'}):
         a.decompose()
 
-    news_contents = soup.find_all('div', {'class': 'list media_rows middle'})
+    news_contents = soup.find_all('ul', {'class': 'wisata_newsfeed'})
     for i in news_contents:
-        contents = i.findAll('article')
 
-        for content in contents:
-            soup2 = BeautifulSoup(str(content), 'lxml')
+        li_div = i.findAll('li')
 
-            a_div = soup2.findAll('a')
-            links.append(a_div[0]['href'])
-            
-            span_div = a_div[0].findAll('span', {'class': 'ratiobox ratio_16_9 box_img'})
+        for li in li_div:
 
-            for span in span_div:
-                span_img = span.findAll('span', {'class': 'ratiobox_content lqd'})
+            link_div = li.findAll('a')
+            for link in link_div:
+                links.append(link['href'])
 
-                for img in span_img:
-                    img_div = img.findAll('img')
-                    photo_links.append(img_div[0]['src'].split("?")[0])
+            title_div = li.findAll('span', {'class' : 'area-judul'})
+            for div in title_div:
+                h3_div = div.findAll('h3')
+                for h3 in h3_div:
+                    titles.append(h3.text)
 
-            span_content = a_div[0].findAll('span', {'class': 'box_text'})
-            for span in span_content:
-                title_div = span.findAll('h2', {'class': 'title'})
-                for title in title_div:
-                    titles.append(title.text)
+            image_div = li.findAll('span', {'class' : 'ratiobox_content lqd'})
+            for div in image_div:
+                img_div = div.findAll('img')
+                for img in img_div:
+                    photo_links.append(img['src'].split('?')[0])
 
-                date_div = span.findAll('span', {'class': 'date'})
-                for date in date_div:
-                    comments = date.findAll(text=lambda text:isinstance(text, Comment))
-                    for comment in comments:
-                        datetimes.append(comment)
+    # datetimes_ = []
 
-    datetimes_ = []
+    # month_dict = {
+    #     ' 01 ': ' Jan ',
+    #     ' 02 ': ' Feb ',
+    #     ' 03 ': ' Mar ',
+    #     ' 04 ': ' Apr ',
+    #     ' 05 ': ' May ',
+    #     ' 06 ': ' Jun ',
+    #     ' 07 ': ' Jul ',
+    #     ' 08 ': ' Aug ',
+    #     ' 09 ': ' Sep ',
+    #     ' 10 ': ' Oct ',
+    #     ' 11 ': ' Nov ',
+    #     ' 12 ': ' Dec ',
+    # }
 
-    month_dict = {
-        ' 01 ': ' Jan ',
-        ' 02 ': ' Feb ',
-        ' 03 ': ' Mar ',
-        ' 04 ': ' Apr ',
-        ' 05 ': ' May ',
-        ' 06 ': ' Jun ',
-        ' 07 ': ' Jul ',
-        ' 08 ': ' Aug ',
-        ' 09 ': ' Sep ',
-        ' 10 ': ' Oct ',
-        ' 11 ': ' Nov ',
-        ' 12 ': ' Dec ',
-    }
+    # check_dict = {
+    #     'Jan': 'January',
+    #     'Feb': 'February',
+    #     'Mar': 'March',
+    #     'Jun': 'June',
+    #     'Jul': 'July',
+    #     'Aug': 'August',
+    #     'Sep': 'September',
+    #     'Oct': 'October',
+    #     'Nov': 'November',
+    #     'Dec': 'December'
+    # }
 
-    check_dict = {
-        'Jan': 'January',
-        'Feb': 'February',
-        'Mar': 'March',
-        'Jun': 'June',
-        'Jul': 'July',
-        'Aug': 'August',
-        'Sep': 'September',
-        'Oct': 'October',
-        'Nov': 'November',
-        'Dec': 'December'
-    }
-
-    for d in datetimes:
-        d_ = datetime.datetime.strptime(d[:10], "%Y-%m-%d")
-        d_ = d_.strftime("%d %m %Y") + d[10:]
+    # for d in datetimes:
+    #     d_ = datetime.datetime.strptime(d[:10], "%Y-%m-%d")
+    #     d_ = d_.strftime("%d %m %Y") + d[10:]
         
-        for before, after in month_dict.items():
-            d_ = d_.replace(before, after)
+    #     for before, after in month_dict.items():
+    #         d_ = d_.replace(before, after)
 
-        d_ += ' +0700'
+    #     d_ += ' +0700'
 
-        if d[:2].isdigit() == False:
-            d = '0' + d
+    #     if d[:2].isdigit() == False:
+    #         d = '0' + d
 
-        d__ = ' '.join([check_dict.get(i, i) for i in d_.split()])
-        day = datetime.datetime.strptime(d__[:-15], '%d %B %Y').strftime('%a')
-        d_final = day + ", " + d_
+    #     d__ = ' '.join([check_dict.get(i, i) for i in d_.split()])
+    #     day = datetime.datetime.strptime(d__[:-15], '%d %B %Y').strftime('%a')
+    #     d_final = day + ", " + d_
 
-        datetimes_.append(d_final)
+    #     datetimes_.append(d_final)
 
     titles = list(reversed(titles))
     links = list(reversed(links))
     photo_links = list(reversed(photo_links))
-    datetimes_ = list(reversed(datetimes_))
+    # datetimes_ = list(reversed(datetimes_))
 
-    template = render_template('feedcnnwisata.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_)
+    template = render_template('feedcnnwisata.xml', links=links, titles=titles, photo_links=photo_links)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
 
