@@ -744,7 +744,7 @@ def feedmytrip123():
 
 @app.route('/feed/hipwee')
 def feedhipwee():
-    url = 'https://www.hipwee.com/events/'
+    url = 'https://www.hipwee.com/event/'
     req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
     con = urllib.request.urlopen(req)
     soup = BeautifulSoup(con.read(), 'lxml')
@@ -755,12 +755,37 @@ def feedhipwee():
     paragraph = []
     datetimes = []
 
-    news_contents = soup.find_all('article', {'class', 'archive-base top top-event'})
+    day_dict = {
+        'Monday': 'Mon',
+        'Tuesday': 'Tue',
+        'Wednesday': 'Wed',
+        'Thursday': 'Thu',
+        "Friday": 'Fri',
+        'Saturday': 'Sat',
+        'Sunday': 'Sun'
+    }
+
+    month_dict = {
+        'January': 'Jan',
+        'February': 'Feb',
+        'March': 'Mar',
+        'April': 'Apr',
+        'May' : 'May',
+        'June': 'Jun',
+        'July': 'Jul',
+        'August': 'Aug',
+        'September': 'Sep',
+        'October': 'Oct',
+        'November': 'Nov',
+        'December': 'Dec'
+    }
+
+    news_contents = soup.find_all('div', {'class', 'row gap-20'})
 
     for i in news_contents:
         soup2 = BeautifulSoup(str(i), 'lxml')
         
-        image_div = soup2.findAll('div', {'class': 'image-post'})
+        image_div = soup2.findAll('div', {'class': 'archive-post__img'})
         for div in image_div:
             a_div = div.findAll('a')
             links.append(a_div[0]['href'])
@@ -768,25 +793,35 @@ def feedhipwee():
             for a in a_div:
                 img_div = a.findAll('img')
                 for img in img_div:
-                    photo_links.append(img['src'])  
+                    photo_links.append(img['src'])
 
-        title_div = soup2.findAll('h2', {'class': 'post-title'})
+        title_div = soup2.findAll('h3', {'class': 'post-title'})
         for div in title_div:
             a_div = div.findAll('a')
             for a in a_div:
                 titles.append(a.text)
+                paragraph.append(a.text)
 
-        par_div = soup2.findAll('div', {'class': 'post-excerpt'})
-        for div in par_div:
-            p_div = div.findAll('p')
-            paragraph.append(p_div[0].text)
+        date_div = soup2.findAll('div', {'class' : 'event-date'})[0].text
+        monthyear_div = soup2.findAll('div', {'class' : 'month'})[0].text
+        day_div = soup2.findAll('div', {'class' : 'day'})[0].text
+
+        for before, after in day_dict.items():
+            day_div = day_div.replace(before, after)
+
+        for before, after in month_dict.items():
+            monthyear_div = monthyear_div.replace(before, after)
+
+        date_string = day_div.split(' , ')[0] + ', ' + date_div[:-1] + monthyear_div[:-1] + '00:00:00 +0700'
+        datetimes.append(date_string)
 
     titles = list(reversed(titles))
     links = list(reversed(links))
     photo_links = list(reversed(photo_links))
     paragraph = list(reversed(paragraph))
+    datetimes = list(reversed(datetimes))
 
-    template = render_template('feedhipwee.xml', links=links, titles=titles, photo_links=photo_links, paragraph=paragraph)
+    template = render_template('feedhipwee.xml', links=links, titles=titles, photo_links=photo_links, paragraph=paragraph, datetimes=datetimes)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
 
@@ -1488,7 +1523,7 @@ def feedberitasatukuliner():
 
 @app.route('/feed/pikiranrakyat')
 def feedpikiranrakyat():
-    url = 'https://www.pikiran-rakyat.com/hidup-gaya'
+    url = 'https://www.pikiran-rakyat.com/wisata'
     req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
     con = urllib.request.urlopen(req)
     soup = BeautifulSoup(con.read(), 'lxml')
@@ -1499,74 +1534,64 @@ def feedpikiranrakyat():
     paragraph = []
     datetimes = []
 
-    news_contents = soup.find_all('div', {'id': 'articles'})
+    month_dict = {
+        'Januari': 'Jan',
+        'Februari': 'Feb',
+        'Maret': 'Mar',
+        'April': 'Apr',
+        'Mei': 'May',
+        'Juni': 'Jun',
+        'Juli': 'Jul',
+        'Agustus': 'Aug',
+        'September': 'Sep',
+        'Oktober': 'Oct',
+        'November': 'Nov',
+        'Desember': 'Dec'
+    }
+
+    news_contents = soup.find_all('div', {'class': 'latest__item'})
 
     for i in news_contents:
         soup2 = BeautifulSoup(str(i), 'lxml')
 
-        image_div = soup2.findAll('div', {'class': 'd-flex mr-3 align-self-top'})
+        image_div = soup2.findAll('div', {'class': 'latest__img'})
         for div in image_div:
-            img_div = div.findAll('img')
-            for img in img_div:
-                photo_links.append(img['src'])
-        
-        content_div = soup2.findAll('div', {'class': 'media-body'})
-        for div in content_div:
-            title_div = div.findAll('h4')
-            for title in title_div:
-                titles.append(title.find('a').text)
-                links.append('https://pikiran-rakyat.com' + title.find('a')['href'])
+            a_div = div.findAll('a')
+            for div in a_div:
+                img_div = div.findAll('img')
+                for img in img_div:
+                    photo_links.append(img['src'])
 
-            d_times = div.findAll('small', {'class': 'text-muted'})
-            for d in d_times:
-                datetimes.append(d.text)
+        title_div = soup2.findAll('h2', {'class': 'latest__title'})
+        for div in title_div:
+            a_div = div.findAll('a')
+            for a in a_div:
+                paragraph.append(a.text)
+                titles.append(a.text)
+                links.append(a['href'])
 
-            par_div = div.findAll('p')
-            for par in par_div:
-                paragraph.append(par.text)
+        date_string = soup2.findAll('date', {'class': 'latest__date'})[0].text
 
-    datetimes_ = []
-
-    day_dict = {
-        'Senin': 'Mon',
-        'Selasa': 'Tue',
-        'Rabu': 'Wed',
-        'Kamis': 'Thu',
-        "Jumat": 'Fri',
-        'Sabtu': 'Sat',
-        'Minggu': 'Sun'
-    }
-
-    month_dict = {
-        'Agu': 'Aug',
-        'Okt': 'Oct',
-        'Des': 'Dec'
-    }
-
-    for d in datetimes:
-        d = d[7:-5]
-
-        for before, after in day_dict.items():
-            d = d.replace(before, after)
-
-        if d[5:7].isdigit() == False:
-            d = d.replace(d[5], '0' + d[5])
+        if ' ' in date_string[:2]:
+            date_string = '0' + date_string
 
         for before, after in month_dict.items():
-            d = d.replace(before, after)
+            date_string = date_string.replace(before, after)
 
-        d = d.replace('- ', '') 
-        d += ':00 +0700'
+        date_day = datetime.datetime.strptime(date_string.split(', ')[0], '%d %b %Y').strftime('%a')
 
-        datetimes_.append(d)    
-    
+        date_string = date_string.replace(' WIB', ':00 +0700')
+        date_string = date_day + ', ' + date_string.split(', ')[0] + ' ' + date_string.split(', ')[1]
+
+        datetimes.append(date_string)
+
     titles = list(reversed(titles))
     links = list(reversed(links))
     photo_links = list(reversed(photo_links))
-    datetimes_ = list(reversed(datetimes_))
+    datetimes = list(reversed(datetimes))
     paragraph = list(reversed(paragraph))
 
-    template = render_template('feedpikiranrakyat.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
+    template = render_template('feedpikiranrakyat.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
 
