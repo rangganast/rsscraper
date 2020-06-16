@@ -838,103 +838,33 @@ def feedtirto():
     links = []
     photo_links = []
     paragraph = []
-    datetimes = []
 
-    news_contents = soup.find_all('div', {'class': 'container mt-28 container900'})
+    news_contents = soup.find('div', {'class': 'container mt-28 container900'})
+    news_contents = news_contents.findAll('div')[2]
+    news_contents = news_contents.findAll('div', {'class' : 'mb-3'})
 
-    for i in news_contents:
-        soup2 = BeautifulSoup(str(i), 'lxml')
+    for news in news_contents:
+        soup2 = BeautifulSoup(str(news), 'lxml')
 
-        content_div = soup2.findAll('div')[10]
+        a_div = news.findAll('a')
+        for a in a_div:
+            links.append(a['href'])
 
-        row_div = content_div.findAll('div', {'class': 'row'})
-        for row in row_div:
-            a_div = row.findAll('a')
-            for a in a_div:
-                links.append(a['href'])
-        
-        img_div = content_div.findAll('div', {'class': 'col-12 p-0 relative hidden-over'})
-        for div in img_div:
-            title_div = div.findAll('h1', {'class': 'title-overlay'})
-            for title in title_div:
-                titles.append(title.text)
+            h1_div = a.findAll('h1', {'class' : 'title-overlay'})
+            for h1 in h1_div:
+                titles.append(h1.text)
+                paragraph.append(h1.text)
 
-            img_div = div.findAll('img')
+            img_div = a.findAll('img')
             for img in img_div:
                 photo_links.append(img['src'])
-
-    for link in links:
-        req = urllib.request.Request(link, headers={'User-Agent': "Magic Browser"})
-        con = urllib.request.urlopen(req)
-        soup3 = BeautifulSoup(con.read(), 'lxml')
-
-        d_times = soup3.findAll('span', {'class': 'detail-date mt-1 text-left'})
-        for d in d_times:
-            d = d.text.split("-")[1]
-            d = d[1:]
-            datetimes.append(d)
-
-        par_div = soup3.findAll('i', {'class': 'italic ringkasan mb-2'})
-        for par in par_div:
-            par = par.text
-            par = par.replace('\t', '')
-            par = par.replace('\r', '')
-            par = par.replace('\n', '')
-            paragraph.append(par)
-
-    datetimes_ = []
-
-    month_dict = {
-        'Januari': 'Jan',
-        'Februari': 'Feb',
-        'Maret': 'Mar',
-        'April': 'Apr',
-        'Mei': 'May',
-        'Juni': 'Jun',
-        'Juli': 'Jul',
-        'Agustus': 'Aug',
-        'September': 'Sep',
-        'Oktober': 'Oct',
-        'November': 'Nov',
-        'Desember': 'Dec'
-    }
-
-    check_dict = {
-        'Jan': 'January',
-        'Feb': 'February',
-        'Mar': 'March',
-        'Apr': 'April',
-        'Jun': 'June',
-        'Jul': 'July',
-        'Aug': 'August',
-        'Sep': 'September',
-        'Oct': 'October',
-        'Nov': 'November',
-        'Dec': 'December'
-    }
-
-    for d in datetimes:
-        if d[:2].isdigit() == False:
-            d = '0' + d
-
-        for before, after in month_dict.items():
-            d = d.replace(before, after)
-
-        d += ' 00:00:00 +0700'
-
-        d_ = ' '.join([check_dict.get(i, i) for i in d.split()])
-        day = datetime.datetime.strptime(d_[:-15], '%d %B %Y').strftime('%a')
-        d_final = day + ", " + d
-
-        datetimes_.append(d_final) 
 
     titles = list(reversed(titles))
     links = list(reversed(links))
     photo_links = list(reversed(photo_links))
-    datetimes_ = list(reversed(datetimes_))
     paragraph = list(reversed(paragraph))
 
-    template = render_template('feedtirto.xml', links=links, titles=titles, photo_links=photo_links, datetimes=datetimes_, paragraph=paragraph)
+    template = render_template('feedtirto.xml', links=links, titles=titles, photo_links=photo_links, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
 
