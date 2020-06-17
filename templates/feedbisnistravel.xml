@@ -16,7 +16,7 @@
             <guid>{{links[i]}}</guid>
             <description>
                 <![CDATA[
-            <img src="{{photo_links[i]}}">
+            <img src="{{photo_links[i]}}"> {{paragraph[i]}}
             ]]>
             </description>
         </item>

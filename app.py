@@ -966,7 +966,7 @@ def feedsindonews():
 
 @app.route('/feed/bisnistravel')
 def feedbisnistravel():
-    url = 'https://traveling.bisnis.com/'
+    url = 'https://traveling.bisnis.com/info-travel'
     req = urllib.request.Request(url, headers={'User-Agent': "Magic Browser"})
     con = urllib.request.urlopen(req)
     soup = BeautifulSoup(con.read(), 'lxml')
@@ -975,92 +975,37 @@ def feedbisnistravel():
     links = []
     photo_links = []
     paragraph = []
-    datetimes = []
 
-    news_contents = soup.find_all('div', {'class': 'sub-highlight'})
+    for a in soup.find_all('li', {'class' : 'big style2'}):
+        a.decompose()
+
+    news_contents = soup.find('ul', {'id': 'loadmore-news-place'})
+    news_contents = news_contents.findAll('li')
 
     for i in news_contents:
         soup2 = BeautifulSoup(str(i), 'lxml')
 
-        a_div = soup2.findAll('a')
+        image_div = soup2.findAll('div', {'class' : 'col-sm-4'})
+        for div in image_div:
+            a_div = div.findAll('a')
+            for a in a_div:
+                links.append(a['href'])
 
-        links.append(a_div[0]['href'])
+                img_div = a.findAll('img')
+                for img in img_div:
+                    photo_links.append(img['src'])
 
-        img_div = a_div[0].findAll('img')
-        for img in img_div:
-            photo_links.append(img['src'])
+        text_div = soup2.findAll('div', {'class' : 'col-sm-8'})
+        for div in text_div:
+            h2_div = div.findAll('a')
+            for h2 in h2_div:
+                titles.append(h2.text)
 
-        titles.append(a_div[1].text)
+        par_div = soup2.findAll('div', {'class' : 'description width-list-market-small2'})
+        for par in par_div:
+            paragraph.append(par.text)
 
-    # for link in links:
-    #     req = urllib.request.Request(link, headers={'User-Agent': "Magic Browser"})
-    #     con = urllib.request.urlopen(req)
-    #     soup3 = BeautifulSoup(con.read(), 'lxml')
-
-    #     d_times = soup3.findAll('div', {'class': 'new-description'})
-    #     for d in d_times:
-    #         span_div = d.findAll('span')
-    #         for span in span_div:
-    #             datetimes.append(span.text)
-
-    #     par_div = soup3.findAll('div', {'class': 'subtitle'})
-    #     for par in par_div:
-    #         paragraph.append(par.text)
-
-    # datetimes_ = []
-
-    # month_dict = {
-    #     'Januari': 'Jan',
-    #     'Februari': 'Feb',
-    #     'Maret': 'Mar',
-    #     'April': 'Apr',
-    #     'Mei': 'May',
-    #     'Juni': 'Jun',
-    #     'Juli': 'Jul',
-    #     'Agustus': 'Aug',
-    #     'September': 'Sep',
-    #     'Oktober': 'Oct',
-    #     'November': 'Nov',
-    #     'Desember': 'Dec'
-    # }
-
-    # check_dict = {
-    #     'Jan': 'January',
-    #     'Feb': 'February',
-    #     'Mar': 'March',
-    #     'Jun': 'June',
-    #     'Jul': 'July',
-    #     'Aug': 'August',
-    #     'Sep': 'September',
-    #     'Oct': 'October',
-    #     'Nov': 'November',
-    #     'Dec': 'December'
-    # }
-
-    # for d in datetimes:
-
-    #     d = d[1:-1]
-
-    #     if d[:2].isdigit() == False:
-    #         d = '0' + d
-
-    #     for before, after in month_dict.items():
-    #         d = d.replace(before, after)
-
-    #     d = d.replace(u'\xa0' + '|' + u'\xa0' + ' ', '')
-    #     d = d.replace(' WIB', ':00 +0700')
-    #     d_ = ' '.join([check_dict.get(i, i) for i in d.split()])
-    #     day = datetime.datetime.strptime(d_[:-15], '%d %B %Y').strftime('%a')
-
-    #     d = day + ', ' + d
-
-    #     datetimes_.append(d)
-
-    titles = list(reversed(titles))
-    links = list(reversed(links))
-    photo_links = list(reversed(photo_links))
-
-    template = render_template('feedbisnistravel.xml', links=links, titles=titles, photo_links=photo_links)
+    template = render_template('feedbisnistravel.xml', links=links, titles=titles, photo_links=photo_links, paragraph=paragraph)
     response = make_response(template)
     response.headers['Content-Type'] = 'application/xml'
 
