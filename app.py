@@ -2257,7 +2257,7 @@ def feedyoutubefahmicatperku():
             if p_div[0].text != None:
                 paragraph.append(p_div[0].text)
             else:
-                paragraph.append('amnjiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii')
+                paragraph.append('')
 
     titles = list(reversed(titles))
     links = list(reversed(links))
