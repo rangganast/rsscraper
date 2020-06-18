@@ -2254,12 +2254,17 @@ def feedyoutubefahmicatperku():
         news_contents = soup3.findAll('div', {'id': 'watch-description-text'})
         for news in news_contents:
             p_div = news.findAll('p', {'id': 'eow-description'})
-            paragraph.append(p_div[0].text)
+            if p_div[0].text != None:
+                paragraph.append(p_div[0].text)
+            else:
+                paragraph.append('amnjiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii')
 
     titles = list(reversed(titles))
     links = list(reversed(links))
     photo_links = list(reversed(photo_links))
     paragraph = list(reversed(paragraph))
+    print(len(links))
+    print(len(paragraph))
 
     template = render_template('feedyoutubefahmicatperku.xml', links=links, titles=titles, photo_links=photo_links, paragraph=paragraph)
     response = make_response(template)
